@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparable Sales Report</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="tour-backdrop" class="tour-backdrop hidden"></div>
+
+<div class="report-wrapper">
+    <div class="report-container">
+        
+        <div class="report-header" id="target-header">
+            <div class="title-section">
+                <img src="https://propertytaxadvisors.com/wp-content/uploads/2026/04/Assessify-logo-1.png" alt="Assessify Logo" class="company-logo">
+                <h1>Comparable Sales Report</h1>
+                <span class="tax-year">Tax Year: 2024</span>
+            </div>
+            <div class="meta-section">
+                <p><strong>Application Name:</strong> John Doe</p>
+                <p><strong>Application #:</strong> 12345-ABC</p>
+                <p><strong>Hearing Date:</strong> October 15, 2024</p>
+            </div>
+        </div>
+
+        <div class="action-buttons no-print">
+            <button id="start-tour-btn" class="btn-primary">
+                <i class="fa-solid fa-graduation-cap"></i> Walk Through Report
+            </button>
+            <button onclick="window.print()" class="btn-secondary">
+                <i class="fa-solid fa-file-pdf"></i> Print/Download Report
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="comp-grid">
+                <thead id="target-grid-head">
+                    <tr>
+                        <th data-col="0">Features</th>
+                        <th data-col="1" class="subject-header" id="target-subj-col">Subject Property</th>
+                        <th data-col="2" class="comp-header" id="target-comp1">Comp 1</th>
+                        <th data-col="3" class="comp-header" id="target-comp2">Comp 2</th>
+                        <th data-col="4" class="comp-header" id="target-comp3">Comp 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="address-row">
+                        <td data-col="0"><strong>Address</strong></td>
+                        <td data-col="1">25131 Rivendell Dr</td>
+                        <td data-col="2">25141 Rivendell</td>
+                        <td data-col="3">25071 Castlewood</td>
+                        <td data-col="4">25131 Carolwood</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">APN # <br><span class="sub-label">MLS #</span></td>
+                        <td data-col="1">614-083-07</td>
+                        <td data-col="2">614-083-09 <br><span class="sub-label">OC23041543</span></td>
+                        <td data-col="3">614-551-33 <br><span class="sub-label">OC24025411</span></td>
+                        <td data-col="4">614-551-14 <br><span class="sub-label">IV23145161</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Proximity to Subject</td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">105.6 feet</td>
+                        <td data-col="3">0.27 miles</td>
+                        <td data-col="4">0.29 miles</td>
+                    </tr>
+                    <tr id="target-roll-val">
+                        <td data-col="0">Roll Value | Sales Price <br><span class="val-rate">$692</span></td>
+                        <td data-col="1"><strong>$1,352,520</strong></td>
+                        <td data-col="2"><strong>$1,100,000</strong> <br><span class="sub-label">648 p/sqft</span></td>
+                        <td data-col="3"><strong>$1,320,000</strong> <br><span class="sub-label">650 p/sqft</span></td>
+                        <td data-col="4"><strong>$1,150,000</strong> <br><span class="sub-label">566 p/sqft</span></td>
+                    </tr>
+                    <tr class="subheader-row" id="target-adj-header">
+                        <td data-col="0"><strong>VALUE ADJUSTMENTS</strong></td>
+                        <td data-col="1">Description</td>
+                        <td data-col="2">Description <span class="adj-header">+(-) Adjustments</span></td>
+                        <td data-col="3">Description <span class="adj-header">+(-) Adjustments</span></td>
+                        <td data-col="4">Description <span class="adj-header">+(-) Adjustments</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Lien Date | Sale Date (%/mo.adj) <br><span class="val-rate">1% / Mo.</span></td>
+                        <td data-col="1">1/1/2024</td>
+                        <td data-col="2">04/11/2023</td>
+                        <td data-col="3">03/11/2024</td>
+                        <td data-col="4">10/11/2023</td>
+                    </tr>
+                    <tr id="target-add-rows">
+                        <td data-col="0">View</td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">Neighborhood Park/Greenbelt</td>
+                        <td data-col="3">Trees/Woods</td>
+                        <td data-col="4">Trees/Woods</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Year Built (% difference)</td>
+                        <td data-col="1">1969</td>
+                        <td data-col="2">1969</td>
+                        <td data-col="3">1979</td>
+                        <td data-col="4">1979</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Bed <span class="val-rate">$20,000</span></td>
+                        <td data-col="1">4</td>
+                        <td data-col="2">3 <span class="adj-plus">$20,000</span></td>
+                        <td data-col="3">3 <span class="adj-plus">$20,000</span></td>
+                        <td data-col="4">3 <span class="adj-plus">$20,000</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Bath <span class="val-rate">$20,000</span></td>
+                        <td data-col="1">2</td>
+                        <td data-col="2">1 <span class="adj-plus">$20,000</span></td>
+                        <td data-col="3">2</td>
+                        <td data-col="4">2</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Improvement Size <span class="val-rate">$208</span></td>
+                        <td data-col="1">1,955</td>
+                        <td data-col="2">1,697 <span class="adj-plus">$54,000</span></td>
+                        <td data-col="3">2,032 <span class="adj-minus">($16,000)</span></td>
+                        <td data-col="4">2,032 <span class="adj-minus">($16,000)</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Lot Area <span class="val-rate">$27,050</span></td>
+                        <td data-col="1">6,120</td>
+                        <td data-col="2">5,400 <span class="adj-plus">$10,000</span></td>
+                        <td data-col="3">7,000 <span class="adj-minus">($12,000)</span></td>
+                        <td data-col="4">7,400 <span class="adj-minus">($18,000)</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Remodeled / Condition</td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">-- <span class="adj-zero">($0)</span></td>
+                        <td data-col="3">-- <span class="adj-zero">($0)</span></td>
+                        <td data-col="4">-- <span class="adj-zero">($0)</span></td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Pool <span class="val-rate">$50,000</span></td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">--</td>
+                        <td data-col="3">--</td>
+                        <td data-col="4">--</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Noise/Traffic <span class="val-rate">1%</span></td>
+                        <td data-col="1">No</td>
+                        <td data-col="2">No</td>
+                        <td data-col="3">No</td>
+                        <td data-col="4">No</td>
+                    </tr>
+                    <tr>
+                        <td data-col="0">Property Sub Type</td>
+                        <td data-col="1">SingleFamily</td>
+                        <td data-col="2">Single Family Residence</td>
+                        <td data-col="3">Single Family Residence</td>
+                        <td data-col="4">Single Family Residence</td>
+                    </tr>
+                    
+                    <tr class="highlight-row" id="target-total-net">
+                        <td data-col="0"><strong>Total Net Adjustment</strong></td>
+                        <td data-col="1">--</td>
+                        <td data-col="2"><strong>$104,000</strong></td>
+                        <td data-col="3" class="text-red"><strong>($8,000)</strong></td>
+                        <td data-col="4" class="text-red"><strong>($14,000)</strong></td>
+                    </tr>
+                    <tr class="highlight-row" id="target-final-adj">
+                        <td data-col="0"><strong>Final Adjusted Value</strong></td>
+                        <td data-col="1">--</td>
+                        <td data-col="2"><strong>1,204,000</strong></td>
+                        <td data-col="3"><strong>1,312,000</strong></td>
+                        <td data-col="4"><strong>1,136,000</strong></td>
+                    </tr>
+                    <tr id="target-adj-sqft">
+                        <td data-col="0">Adj $/Sqft (SUBJ)</td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">616</td>
+                        <td data-col="3">671</td>
+                        <td data-col="4">581</td>
+                    </tr>
+                    <tr id="target-weight">
+                        <td data-col="0">Weighted</td>
+                        <td data-col="1">--</td>
+                        <td data-col="2">33%</td>
+                        <td data-col="3">33%</td>
+                        <td data-col="4">33%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bottom-section">
+            <div class="notes-panel" id="target-notes">
+                <h3><i class="fa-solid fa-clipboard-list"></i> Notes</h3>
+                <ul>
+                    <li>Assessed $1,352,520 vs. supported $1,217,000 → ~$135K overvaluation as of 1/1/2024.</li>
+                    <li>Comp 1 (105 ft away): sold $1.10M → adjusted $1.204M; inferior (smaller, fewer beds/baths), still below roll value.</li>
+                    <li>Comp 2 ($1.312M adj., near lien date) & Comp 3 ($1.136M adj.) bracket value → support ~$1.217M conclusion.</li>
+                </ul>
+            </div>
+
+            <div class="final-value-card" id="target-final-val">
+                <h4>FINAL VALUE INDICATED BY MARKET APPROACH</h4>
+                <div class="value-amount">$1,217,000</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="tour-modal" class="tour-modal hidden no-print">
+    <div class="tour-arrow"></div>
+    <div class="tour-header">
+        <div class="tour-header-top">
+            <span id="tour-counter" class="tour-counter">1 of 16</span>
+            <h2 id="tour-step-title">Title Goes Here</h2>
+            <button id="tour-close" class="tour-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="tour-progress-track">
+            <div id="tour-progress-bar" class="tour-progress-bar"></div>
+        </div>
+    </div>
+    <div class="tour-content" id="tour-content-text">
+        </div>
+    <div class="tour-controls">
+        <button id="tour-prev" class="btn-tour-nav"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+        <button id="tour-next" class="btn-tour-primary">Next <i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
