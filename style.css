@@ -3,7 +3,7 @@
     --brand-navy: #0e1e2d;   
     --brand-blue: #2563eb;   
     --brand-green: #65a30d;
-    --brand-blue-light: #eff6ff; /* New background for accordion */
+    --brand-blue-light: #eff6ff; 
     --text-main: #333333;
     --text-light: #6b7280;
     --border-color: #e5e7eb;
@@ -58,7 +58,7 @@ body {
 .btn-secondary:hover { background-color: #f8fafc; border-color: var(--brand-blue); }
 
 /* --- Grid Design --- */
-.table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--border-color); }
+.table-wrapper { overflow-x: auto; margin-bottom: 1.5rem; border: 1px solid var(--border-color); border-radius: 4px; background: white;}
 .comp-grid { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 .comp-grid th, .comp-grid td { border: 1px solid var(--border-color); padding: 0.6rem 0.8rem; text-align: left; transition: background-color 0.2s ease; vertical-align: top; }
 .comp-grid th { background-color: #0f172a; color: white; font-weight: 700; border: 1px solid #334155; }
@@ -71,8 +71,11 @@ body {
 .adj-minus { float: right; color: #dc2626; font-weight: 700; }
 .adj-zero { float: right; color: #ef4444; font-weight: 400; opacity: 0.8; }
 .text-red { color: #dc2626; }
-.highlight-row-net td { background-color: #e2e8f0; border-top: 2px solid #0f172a !important; }
-.highlight-row-final td { background-color: #e2e8f0; border-bottom: 2px solid #0f172a !important; }
+
+/* Removed thick borders from previous version, matches clean screenshot style */
+.highlight-row-net td { background-color: #f1f5f9; }
+.highlight-row-final td { background-color: #e2e8f0; }
+
 .comp-grid tbody tr:hover td { background-color: #f8fafc; }
 .comp-grid tbody td.hover-col { background-color: #f1f5f9 !important; }
 
@@ -92,6 +95,8 @@ body {
 .tour-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); z-index: 9997; transition: opacity 0.3s ease; }
 td.tour-highlight-active, th.tour-highlight-active, tr.tour-highlight-active td { background-color: var(--bg-white); position: relative; z-index: 9998 !important; box-shadow: 0 0 10px rgba(37, 99, 235, 0.15); }
 th.tour-highlight-active { background-color: #0f172a; color: white !important;}
+
+/* Container Level Glow (Grid and Rows) */
 div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-index: 9998 !important; box-shadow: 0 0 0 4px white, 0 0 20px rgba(37, 99, 235, 0.4); border-radius: 4px; background-color: var(--bg-white); }
 
 .tour-modal { position: absolute; width: 500px; background: var(--bg-white); border-radius: 8px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3); z-index: 10000; overflow: visible; border: 1px solid var(--border-color); transition: opacity 0.2s ease, transform 0.2s ease; }
@@ -104,13 +109,14 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
 .tour-close { background: none; border: none; color: #9ca3af; font-size: 1.2rem; cursor: pointer; padding: 0; }
 .tour-close:hover { color: #4b5563; }
 
-.tour-progress-track { height: 6px; background: #e5e7eb; border-radius: 3px; width: 100%; overflow: hidden; }
-.tour-progress-bar { height: 100%; background: var(--brand-green); width: 0%; transition: width 0.3s ease; border-radius: 3px; }
+/* Rounded Green Progress Bar */
+.tour-progress-track { height: 6px; background: #e5e7eb; border-radius: 6px; width: 100%; overflow: hidden; }
+.tour-progress-bar { height: 100%; background: var(--brand-green); width: 0%; transition: width 0.3s ease; border-radius: 6px; }
 
-/* TOUR CONTENT - UNCRAMPED & STYLED */
+/* TOUR CONTENT */
 .tour-content {
-    padding: 1.5rem;
-    max-height: 40vh; /* Changed from fixed 230px to adaptive viewport height */
+    padding: 1.5rem 1.5rem 0 1.5rem; /* Removed bottom padding to attach to accordion seamlessly */
+    max-height: 40vh; 
     overflow-y: auto;
     font-size: 0.95rem; line-height: 1.6; color: #374151;
 }
@@ -121,29 +127,26 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
 
 .tour-example-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0 1.5rem 0; }
 .tour-example-table th, .tour-example-table td { border: 1px solid #e2e8f0; padding: 0.6rem; text-align: left; }
-.tour-example-table th { background: #0f6efc; color: white; border: none; }
+.tour-example-table th { background: var(--brand-blue); color: white; border: none; }
 
-/* Quick Link Navigation */
-.quick-link {
-    color: var(--brand-blue); text-decoration: underline; cursor: pointer;
-    font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem;
-    margin-top: 0.5rem; font-size: 0.9rem;
-}
+.quick-link { color: var(--brand-blue); text-decoration: underline; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.9rem; margin-bottom: 1rem;}
 .quick-link:hover { color: #1d4ed8; text-decoration: none; }
 
-/* --- REDESIGNED ACCORDION (Matches "Accordion Item #1" Screenshot) --- */
+/* --- REDESIGNED ACCORDION --- */
+#tour-accordion-container { padding: 0 1.5rem 1rem 1.5rem; }
+
 .tour-accordion {
     border: 1px solid #d1d5db;
     border-radius: 6px;
     background: var(--bg-white);
-    margin-top: 1.5rem; 
-    overflow: hidden; /* Ensures rounded corners on header */
+    margin-top: 1rem; 
+    overflow: hidden; 
 }
 .accordion-header {
     width: 100%; text-align: left; border: none;
-    background: var(--brand-blue-light); /* Light blue bg */
+    background: var(--brand-blue-light); 
     padding: 1rem 1.2rem; font-size: 0.95rem; font-weight: 600; 
-    color: var(--brand-blue); /* Blue text */
+    color: var(--brand-blue); 
     cursor: pointer; display: flex; justify-content: space-between; align-items: center;
     transition: background 0.2s;
 }
@@ -159,7 +162,6 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
 .accordion-content ol { margin: 0; padding-left: 1.2rem; line-height: 1.6; }
 .accordion-content li { margin-bottom: 0.5rem; }
 
-/* Buttons */
 .tour-controls {
     display: flex; justify-content: flex-end; gap: 0.8rem;
     padding: 1rem 1.5rem; background: var(--bg-white);
@@ -196,8 +198,8 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
     .text-red { color: #dc2626 !important; }
     .address-row td { background-color: white !important; font-weight: bold; }
     .subheader-row td { background-color: #f8fafc !important; font-weight: bold; border-top: 1px solid #e2e8f0; }
-    .highlight-row-net td { background-color: #f1f5f9 !important; border-top: 2px solid #0f172a !important; }
-    .highlight-row-final td { background-color: #dbeafe !important; border-bottom: 2px solid #0f172a !important; }
+    .highlight-row-net td { background-color: #f1f5f9 !important; }
+    .highlight-row-final td { background-color: #e2e8f0 !important; }
     .bottom-section { display: flex; gap: 1rem; align-items: stretch; }
     .notes-panel { flex: 2; border: 1px solid #e2e8f0 !important; padding: 0.5rem 0.75rem !important; background: #ffffff !important; }
     .notes-panel h3 { margin: 0 0 0.2rem 0; font-size: 9pt; color: #0f172a; }

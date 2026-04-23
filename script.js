@@ -15,16 +15,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const tourData = [
+        // STEP 0: Introduction (Special handling in JS logic below)
         {
-            targetId: "target-header",
-            title: "Introduction",
+            isIntro: true,
+            title: "Welcome to your Walk-Through",
             text: `
-                <p>Our beginner-friendly walkthrough of your Comparable Sales Report tool is designed to ensure you are able to fully understand your report. Our goal is to explain your report in a way that is understandable even if you have zero background in market value analysis.</p>
-                <p>Click <strong>Next</strong> to continue.</p>
+                <p>This interactive tour will guide you step-by-step through the components of your valuation analysis.</p>
+                <p style="font-weight: bold; color: var(--brand-navy); margin-top: 1rem;"><i class="fa-solid fa-list-check text-blue"></i> What you will learn:</p>
+                <ul>
+                    <li>The purpose of this report and how it affects your property taxes.</li>
+                    <li>How to read and understand the comparison grid.</li>
+                    <li>Exactly how adjustments are calculated.</li>
+                    <li>How we arrived at the final market value.</li>
+                </ul>
+                <p style="font-weight: bold; color: var(--brand-navy); margin-top: 1rem;"><i class="fa-solid fa-gamepad text-blue"></i> How to use this tool:</p>
+                <ul>
+                    <li>Use the <strong>Next</strong> and <strong>Previous</strong> buttons to navigate.</li>
+                    <li>Click the <strong>accordion</strong> at the bottom of each step for deeper insights and definitions.</li>
+                    <li>You can close the tour at any time by clicking the 'X' or outside the box.</li>
+                </ul>
             `
         },
+        // STEPS 1-15 (Visible in Progress Bar)
         {
-            targetId: "target-header",
+            targetId: "target-full-grid", // Highlights entire grid instead of header
             title: "Purpose of a Comparable Sales Report",
             text: `
                 <p>A Comparable Sales Report is a market-based valuation analysis. <strong>Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</strong></p>
@@ -288,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const textEl = document.getElementById('tour-content-text');
     const counterEl = document.getElementById('tour-counter');
     const progressBar = document.getElementById('tour-progress-bar');
+    const accordionContainer = document.getElementById('tour-accordion-container');
     
     // Global listener for Quick Links inserted dynamically
     document.addEventListener('click', function(e) {
@@ -306,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const getAccordionHTML = (titleText) => `
         <div class="tour-accordion">
             <button class="accordion-header" id="tour-accordion-btn">
-                <span>[placeholder]</span>
+                <span>Click to read more about [placeholder]</span>
                 <i class="fa-solid fa-chevron-down"></i> 
             </button>
             <div class="accordion-content" id="tour-accordion-content">
@@ -321,98 +336,131 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTour() {
         const step = tourData[currentStep];
+        const btnPrev = document.getElementById('tour-prev');
+        const btnNext = document.getElementById('tour-next');
+        const tourArrow = modal.querySelector('.tour-arrow');
         
         backdrop.classList.remove('hidden');
         document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
         
-        // Reset scroll
         textEl.scrollTop = 0;
-
         let primaryTargetEl = null;
 
-        if (step.targetCol) {
-            const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
-            columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
-            if(columnCells.length > 0) primaryTargetEl = columnCells[0]; 
-        } else if (step.targetId) {
-            primaryTargetEl = document.getElementById(step.targetId);
-            if(primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
-        }
+        // Check if intro logic should trigger
+        if (step.isIntro) {
+            // Center the modal
+            modal.style.top = '50%';
+            modal.style.left = '50%';
+            modal.style.transform = 'translate(-50%, -50%)';
+            
+            // Hide elements
+            tourArrow.style.display = 'none';
+            accordionContainer.style.display = 'none';
+            btnPrev.style.display = 'none';
+            
+            // Format Intro states
+            btnNext.innerHTML = 'Get Started <i class="fa-solid fa-arrow-right"></i>';
+            counterEl.textContent = 'Introduction';
+            progressBar.style.width = '0%';
+            
+            titleEl.innerHTML = step.title;
+            textEl.innerHTML = step.text;
+            
+        } else {
+            // Standard placement for steps 1-15
+            modal.style.transform = 'none';
+            tourArrow.style.display = 'block';
+            accordionContainer.style.display = 'block';
+            btnPrev.style.display = 'inline-block';
+            btnPrev.style.visibility = 'visible';
 
-        if(primaryTargetEl) {
-            primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            setTimeout(() => { 
-                const rect = primaryTargetEl.getBoundingClientRect();
-                const tourArrow = modal.querySelector('.tour-arrow');
-
-                if (step.targetCol) {
-                    const isLeftHalf = rect.left < window.innerWidth / 2;
-                    modal.style.top = '15%'; 
-                    
-                    if (isLeftHalf) {
-                        modal.style.left = (rect.right + 25) + 'px'; 
-                        tourArrow.style.top = '30px';
-                        tourArrow.style.left = '-15px';
-                        tourArrow.style.borderTop = '15px solid transparent';
-                        tourArrow.style.borderBottom = '15px solid transparent';
-                        tourArrow.style.borderRight = '15px solid #ffffff'; 
-                        tourArrow.style.borderLeft = 'none';
-                    } else {
-                        modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
-                        tourArrow.style.top = '30px';
-                        tourArrow.style.left = '100%';
-                        tourArrow.style.borderTop = '15px solid transparent';
-                        tourArrow.style.borderBottom = '15px solid transparent';
-                        tourArrow.style.borderLeft = '15px solid #ffffff'; 
-                        tourArrow.style.borderRight = 'none';
-                    }
-                } else {
-                    const targetCenter = rect.top + (rect.height / 2);
-                    if (targetCenter < window.innerHeight / 2) {
-                        modal.style.top = (rect.bottom + window.scrollY + 20) + 'px'; 
-                        modal.style.left = Math.max(20, rect.left) + 'px'; 
-                        tourArrow.style.top = '-15px';
-                        tourArrow.style.left = '30px';
-                        tourArrow.style.borderBottom = '15px solid #f8fafc'; 
-                        tourArrow.style.borderTop = 'none';
-                        tourArrow.style.borderLeft = '15px solid transparent';
-                        tourArrow.style.borderRight = '15px solid transparent';
-                    } else {
-                        modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
-                        modal.style.left = Math.max(20, rect.left) + 'px';
-                        tourArrow.style.top = '100%'; 
-                        tourArrow.style.left = '30px';
-                        tourArrow.style.borderTop = '15px solid #ffffff'; 
-                        tourArrow.style.borderBottom = 'none';
-                        tourArrow.style.borderLeft = '15px solid transparent';
-                        tourArrow.style.borderRight = '15px solid transparent';
-                    }
-                }
-            }, 150); 
-        }
-
-        titleEl.innerHTML = step.title;
-        // Inject Text + Accordion
-        textEl.innerHTML = step.text + getAccordionHTML(step.title);
-        
-        // Re-attach Accordion Event Listener to new HTML
-        const accBtn = document.getElementById('tour-accordion-btn');
-        accBtn.addEventListener('click', function() {
-            const accContent = document.getElementById('tour-accordion-content');
-            accContent.classList.toggle('show');
-            accBtn.classList.toggle('active'); // Toggles the chevron rotation
-            if(accContent.classList.contains('show')) {
-                setTimeout(() => textEl.scrollTop = textEl.scrollHeight, 50);
+            // Highlight Target logic
+            if (step.targetCol) {
+                const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
+                columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
+                if(columnCells.length > 0) primaryTargetEl = columnCells[0]; 
+            } else if (step.targetId) {
+                primaryTargetEl = document.getElementById(step.targetId);
+                if(primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
             }
-        });
 
-        counterEl.textContent = `${currentStep + 1} of ${tourData.length}`;
-        const progressPercentage = ((currentStep + 1) / tourData.length) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
+            // Placement calculation
+            if(primaryTargetEl) {
+                primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        document.getElementById('tour-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-        document.getElementById('tour-next').innerHTML = currentStep === tourData.length - 1 ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+                setTimeout(() => { 
+                    const rect = primaryTargetEl.getBoundingClientRect();
+                    
+                    if (step.targetCol) {
+                        const isLeftHalf = rect.left < window.innerWidth / 2;
+                        modal.style.top = '15%'; 
+                        
+                        if (isLeftHalf) {
+                            modal.style.left = (rect.right + 25) + 'px'; 
+                            tourArrow.style.top = '30px';
+                            tourArrow.style.left = '-15px';
+                            tourArrow.style.borderTop = '15px solid transparent';
+                            tourArrow.style.borderBottom = '15px solid transparent';
+                            tourArrow.style.borderRight = '15px solid #ffffff'; 
+                            tourArrow.style.borderLeft = 'none';
+                        } else {
+                            modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
+                            tourArrow.style.top = '30px';
+                            tourArrow.style.left = '100%';
+                            tourArrow.style.borderTop = '15px solid transparent';
+                            tourArrow.style.borderBottom = '15px solid transparent';
+                            tourArrow.style.borderLeft = '15px solid #ffffff'; 
+                            tourArrow.style.borderRight = 'none';
+                        }
+                    } else {
+                        const targetCenter = rect.top + (rect.height / 2);
+                        if (targetCenter < window.innerHeight / 2) {
+                            modal.style.top = (rect.bottom + window.scrollY + 20) + 'px'; 
+                            modal.style.left = Math.max(20, rect.left) + 'px'; 
+                            tourArrow.style.top = '-15px';
+                            tourArrow.style.left = '30px';
+                            tourArrow.style.borderBottom = '15px solid #f8fafc'; 
+                            tourArrow.style.borderTop = 'none';
+                            tourArrow.style.borderLeft = '15px solid transparent';
+                            tourArrow.style.borderRight = '15px solid transparent';
+                        } else {
+                            modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
+                            modal.style.left = Math.max(20, rect.left) + 'px';
+                            tourArrow.style.top = '100%'; 
+                            tourArrow.style.left = '30px';
+                            tourArrow.style.borderTop = '15px solid #ffffff'; 
+                            tourArrow.style.borderBottom = 'none';
+                            tourArrow.style.borderLeft = '15px solid transparent';
+                            tourArrow.style.borderRight = '15px solid transparent';
+                        }
+                    }
+                }, 150); 
+            }
+
+            titleEl.innerHTML = step.title;
+            textEl.innerHTML = step.text;
+            accordionContainer.innerHTML = getAccordionHTML(step.title);
+            
+            const accBtn = document.getElementById('tour-accordion-btn');
+            accBtn.addEventListener('click', function() {
+                const accContent = document.getElementById('tour-accordion-content');
+                accContent.classList.toggle('show');
+                accBtn.classList.toggle('active'); 
+                if(accContent.classList.contains('show')) {
+                    setTimeout(() => textEl.scrollTop = textEl.scrollHeight, 50);
+                }
+            });
+
+            // Adjust Counter Logic to ignore intro step
+            let displayStep = currentStep; // Since intro is 0, array index 1 becomes step 1
+            let totalSteps = tourData.length - 1; // Subtract 1 for intro
+
+            counterEl.textContent = `${displayStep} of ${totalSteps}`;
+            const progressPercentage = (displayStep / totalSteps) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+
+            btnNext.innerHTML = displayStep === totalSteps ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        }
     }
 
     function endTour() {
