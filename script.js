@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 16-Step Grammar Checked Walkthrough Data ---
     const tourData = [
         {
             targetId: "target-header",
@@ -28,13 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
             targetId: "target-header",
             title: "Purpose of a Comparable Sales Report",
             text: `
-                <p>A Comparable Sales Report is a market-based valuation analysis. Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</p>
-                <p>In a Prop 8 appeal, this report is used to show that the county’s enrolled value is too high. If the report supports a value lower than the assessed value on the roll, that difference may justify a temporary reduction under Proposition 8. The Prop 8 guide states that a decline-in-value appeal applies when the property’s assessed value exceeds its fair market value, and that the relevant valuation date is January 1, also called the lien date.</p>
-                <p><strong><i class="fa-solid fa-bullseye"></i> For example, in your case:</strong></p>
+                <p>A Comparable Sales Report is a market-based valuation analysis. <strong>Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</strong></p>
+                <p>In a Prop 8 appeal, this report is used to show that the county’s enrolled value is too high. If the report supports a value lower than the assessed value on the roll, <strong>that difference may justify a temporary reduction under Proposition 8</strong>. A decline-in-value appeal applies when the property’s assessed value exceeds its fair market value, and that the relevant valuation date is January 1, also known as the <strong>lien date</strong>.</p>
+                <p style="color: var(--brand-blue); font-weight: bold; margin-top: 1.5rem;">
+                    <i class="fa-solid fa-lightbulb"></i> FOR EXAMPLE, IN YOUR CASE:
+                </p>
                 <ul>
-                    <li>The county had your property on the roll at $1,352,520.</li>
-                    <li>BUT the market value analysis indicates it is really worth about $1,217,000.</li>
-                    <li>THEREFORE, the enrolled value should be reduced under Proposition 8.</li>
+                    <li>The county had your property <strong>on the roll at $1,352,520</strong>.</li>
+                    <li><strong>BUT</strong> the market value analysis indicates it is really worth about $1,217,000.</li>
+                    <li><strong>THEREFORE</strong>, the enrolled value should be reduced under Proposition 8.</li>
                 </ul>
             `
         },
@@ -44,14 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
             text: `
                 <p>The report is laid out as a comparison grid. It places the subject property next to three comparable sales and compares them feature by feature. The columns are:</p>
                 <ul>
-                    <li><strong><i class="fa-solid fa-house-user"></i> Subject:</strong> The property being valued.</li>
-                    <li><strong><i class="fa-solid fa-house"></i> Comparable Sales (1-3):</strong> Similar homes that actually sold.</li>
+                    <li><i class="fa-solid fa-house text-blue"></i> <strong>SUBJECT:</strong> The property being valued.</li>
+                    <li><i class="fa-solid fa-house text-blue"></i> <strong>COMPARABLE SALES (1-3):</strong> Similar homes that sold.</li>
                 </ul>
                 <p>This side-by-side format helps the reader see how each comparable differs from the subject and how those differences affect value.</p>
             `
         },
         {
-            targetId: "target-subj-col",
+            targetCol: "1", 
             title: "Subject Property (Overview)",
             text: `
                 <p>The subject property is the property being valued in the appeal. It is the property whose market value the report is trying to estimate.</p>
@@ -75,18 +76,25 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Understanding Adjustments",
             text: `
                 <p>Adjustments are applied to each comparable.</p>
-                <p><strong><i class="fa-solid fa-key"></i> Rule:</strong></p>
+                <p style="font-weight: bold; color: var(--text-main); font-size: 1.05rem;">
+                    <i class="fa-solid fa-key text-blue"></i> Rule:
+                </p>
                 <ul>
                     <li>If the comp is inferior &rarr; add value (+)</li>
                     <li>If the comp is superior &rarr; subtract value (−)</li>
                 </ul>
                 <p>This is because the goal is to estimate what the comparable would have sold for if it had the same features as the subject property. Adjustments are made to the comparable sales, never to the subject property.</p>
                 <p>Comparable sales should be similar in location, size, age, and features, and the strongest sales are generally those closest to the January 1 valuation date and proximity. <em>NOTE: Sales after the lien date are limited, while earlier sales may be used with time adjustment if needed.</em></p>
-                <p><strong><i class="fa-solid fa-circle-exclamation"></i> Why adjustments are needed (Very Important):</strong><br>No two homes are identical. So we ask: <em>"If this comparable were exactly like the subject property… what would it have sold for?"</em></p>
+                <p style="margin-top: 1.5rem;">
+                    <strong style="color: #1e293b; font-size: 1.05rem;">
+                        <i class="fa-solid fa-circle-exclamation text-blue" style="font-size: 1.2rem;"></i> Why adjustments are needed (Very Important):
+                    </strong>
+                </p>
+                <p style="font-style: italic; color: #4b5563; font-size: 1rem;">No two homes are identical. So we ask: "If this comparable were exactly like the subject property… what would it have sold for?"</p>
             `
         },
         {
-            targetId: "target-comp1",
+            targetCol: "2", 
             title: "Comparable Sale 1 Analysis",
             text: `
                 <p>Comparable Sale 1 is especially notable because it is only 105.6 feet from the subject, making it extremely close in location. It also shares the same year built, which strengthens its comparability. However, it is smaller and has fewer bedrooms and bathrooms than the subject.</p>
@@ -97,13 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr><td>Improvement Size</td><td>1,955</td><td>1,697</td><td>+$54,000</td></tr>
                     <tr><td>Lot Area</td><td>6,120</td><td>5,400</td><td>+$10,000</td></tr>
                 </table>
-                <p><strong><i class="fa-solid fa-arrow-right"></i> Total Adjustment:</strong> +$104,000<br>
-                <strong><i class="fa-solid fa-arrow-right"></i> Adjusted Value:</strong> $1,100,000 + $104,000 = $1,204,000</p>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> +$104,000<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,100,000 + $104,000 = $1,204,000
+                </p>
                 <p><strong>Explanation:</strong> Comp 1 sold for $1.1M, but it was inferior to the subject in several important ways. After adjusting it as though it had the subject’s bedroom count, bathroom count, size, and lot size, it indicates the subject would be worth about $1,204,000.</p>
+                <a class="quick-link" data-step="4"><i class="fa-solid fa-rotate-left"></i> Review Adjustment Rules</a>
             `
         },
         {
-            targetId: "target-comp2",
+            targetCol: "3", 
             title: "Comparable Sale 2 Analysis",
             text: `
                 <p>Comp 2 sold for $1,320,000 and is 0.27 miles away. It is closer in bathroom count than Comp 1, but it is larger than the subject and sits on a larger lot.</p>
@@ -114,13 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr><td>Improvement Size</td><td>1,955</td><td>2,032</td><td>($16,000)</td></tr>
                     <tr><td>Lot Area</td><td>6,120</td><td>7,000</td><td>($12,000)</td></tr>
                 </table>
-                <p><strong><i class="fa-solid fa-arrow-right"></i> Total Adjustment:</strong> ($8,000)<br>
-                <strong><i class="fa-solid fa-arrow-right"></i> Adjusted Value:</strong> $1,320,000 − $8,000 = $1,312,000</p>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> ($8,000)<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,320,000 − $8,000 = $1,312,000
+                </p>
                 <p><strong>Explanation:</strong> Comparable Sale 2 has one fewer bedroom than the subject, so the report adds value for that difference. However, it is also larger and sits on a larger lot than the subject, so those superior features require downward adjustments. After all adjustments are applied, it indicates a value of $1,312,000 for the subject.</p>
             `
         },
         {
-            targetId: "target-comp3",
+            targetCol: "4", 
             title: "Comparable Sale 3 Analysis",
             text: `
                 <p>Comparable Sale 3 is also nearby at 0.29 miles and sold on 10/11/2023, closer to the lien date than Comparable 1. Like Comparable 2, it has one fewer bedroom than the subject, but it is larger and on a larger lot.</p>
@@ -131,8 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <tr><td>Improvement Size</td><td>1,955</td><td>2,032</td><td>($16,000)</td></tr>
                     <tr><td>Lot Area</td><td>6,120</td><td>7,400</td><td>($18,000)</td></tr>
                 </table>
-                <p><strong><i class="fa-solid fa-arrow-right"></i> Total Adjustment:</strong> ($14,000)<br>
-                <strong><i class="fa-solid fa-arrow-right"></i> Adjusted Value:</strong> $1,150,000 − $14,000 = $1,136,000</p>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> ($14,000)<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,150,000 − $14,000 = $1,136,000
+                </p>
                 <p><strong>Explanation:</strong> Comparable Sale 3 is adjusted upward for having fewer bedrooms than the subject, but downward because it is superior in improvement size and lot size. After all adjustments are applied, it supports an adjusted value of $1,136,000.</p>
             `
         },
@@ -162,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This number reflects the overall difference between the comparable and the subject after considering the adjusted features.</p>
                 <p>A positive net adjustment means the comparable was overall inferior to the subject. A negative net adjustment means the comparable was overall superior to the subject.</p>
+                <a class="quick-link" data-step="4"><i class="fa-solid fa-calculator"></i> Revisit Adjustment Rules</a>
             `
         },
         {
@@ -209,10 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             targetId: "target-final-val",
-            title: "Final Value Indicated By The Market Approach",
+            title: "Final Value Indicated By Market Approach",
             text: `
                 <p>At the bottom of the report, the grid concludes:</p>
-                <p><strong><i class="fa-solid fa-flag-checkered"></i> Final Value Indicated By Market Approach: $1,217,000</strong></p>
+                <p style="font-size: 1.1rem; color: #1e293b;">
+                    <strong><i class="fa-solid fa-flag-checkered text-blue"></i> Final Value Indicated By Market Approach: $1,217,000</strong>
+                </p>
                 <p>This is the report’s final opinion of the subject property’s market value as of the lien date.</p>
             `
         },
@@ -229,31 +247,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This means the report supports the position that the property was enrolled $135,520 above market value as of January 1, 2024.</p>
                 <p>That difference is what supports the Prop 8 assessment reduction request.</p>
+                <a class="quick-link" data-step="13"><i class="fa-solid fa-arrow-left-long"></i> See how final value was calculated</a>
             `
         },
         {
             targetId: "target-notes",
             title: "Final Conclusion & Key Support",
             text: `
-                <p><strong><i class="fa-solid fa-scale-balanced"></i> Market Value vs. Assessed Value (Core Argument)</strong></p>
+                <p><strong><i class="fa-solid fa-scale-balanced text-blue"></i> Market Value vs. Assessed Value (Core Argument)</strong></p>
                 <ul>
                     <li>Enrolled Value: $1,352,520</li>
                     <li>Supported Market Value: $1,217,000</li>
                     <li>Overvaluation: ~$135,520</li>
                     <li>All three adjusted comparables fall below the enrolled value, supporting a decline-in-value as of 1/1/2024 (lien date).</li>
                 </ul>
-                <p><strong><i class="fa-solid fa-1"></i> Comparable 1 (Strongest Location Indicator)</strong></p>
+                <p><strong><i class="fa-solid fa-1 text-blue"></i> Comparable 1 (Strongest Location Indicator)</strong></p>
                 <ul>
                     <li>Located ~105 feet from subject (same micro-location).</li>
                     <li>Sold for $1,100,000 and adjusted to $1,204,000.</li>
                     <li>Required upward adjustments due to being inferior. Even after adjustments, it is still well below assessed value.</li>
                 </ul>
-                <p><strong><i class="fa-solid fa-2"></i> Comparable 2 (Most Current Sale)</strong></p>
+                <p><strong><i class="fa-solid fa-2 text-blue"></i> Comparable 2 (Most Current Sale)</strong></p>
                 <ul>
                     <li>Sold 03/11/2024 (closest to lien date; highly relevant timing).</li>
                     <li>Minimal net adjustment (-$8,000) indicates strong comparability. Adjusted value: $1,312,000.</li>
                 </ul>
-                <p><strong><i class="fa-solid fa-3"></i> Comparable 3 (Lower-End Market Indicator)</strong></p>
+                <p><strong><i class="fa-solid fa-3 text-blue"></i> Comparable 3 (Lower-End Market Indicator)</strong></p>
                 <ul>
                     <li>Sold for $1,150,000, adjusted to $1,136,000.</li>
                     <li>Represents the lower bound of market range, confirming subject value trends closer to low–mid $1.1M range.</li>
@@ -270,10 +289,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const counterEl = document.getElementById('tour-counter');
     const progressBar = document.getElementById('tour-progress-bar');
     
-    const btnStart = document.getElementById('start-tour-btn');
-    const btnNext = document.getElementById('tour-next');
-    const btnPrev = document.getElementById('tour-prev');
-    const btnClose = document.getElementById('tour-close');
+    // Global listener for Quick Links inserted dynamically
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('.quick-link');
+        if (link) {
+            e.preventDefault();
+            const stepIndex = parseInt(link.getAttribute('data-step'), 10);
+            if (!isNaN(stepIndex) && stepIndex >= 0 && stepIndex < tourData.length) {
+                currentStep = stepIndex;
+                updateTour();
+            }
+        }
+    });
+
+    // Reusable, Redesigned Accordion Template
+    const getAccordionHTML = (titleText) => `
+        <div class="tour-accordion">
+            <button class="accordion-header" id="tour-accordion-btn">
+                <span>[placeholder]</span>
+                <i class="fa-solid fa-chevron-down"></i> 
+            </button>
+            <div class="accordion-content" id="tour-accordion-content">
+                <ol>
+                    <li>This is a placeholder note for the selected section. It can contain secondary instructions or definitions.</li>
+                    <li>If you need further clarification on certain information being requested, please review the Assessify guidelines.</li>
+                    <li>Be prepared to submit this evidence as soon as the Assessor's Office makes a request for it.</li>
+                </ol>
+            </div>
+        </div>
+    `;
 
     function updateTour() {
         const step = tourData[currentStep];
@@ -281,50 +325,94 @@ document.addEventListener('DOMContentLoaded', () => {
         backdrop.classList.remove('hidden');
         document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
         
-        // Reset scroll position within the content window to the top on every step change
+        // Reset scroll
         textEl.scrollTop = 0;
 
-        if(step.targetId) {
-            const targetEl = document.getElementById(step.targetId);
-            if(targetEl) {
-                targetEl.classList.add('tour-highlight-active');
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        let primaryTargetEl = null;
 
-                setTimeout(() => { 
-                    const rect = targetEl.getBoundingClientRect();
-                    const targetCenter = rect.top + (rect.height / 2);
-                    const tourArrow = modal.querySelector('.tour-arrow');
+        if (step.targetCol) {
+            const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
+            columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
+            if(columnCells.length > 0) primaryTargetEl = columnCells[0]; 
+        } else if (step.targetId) {
+            primaryTargetEl = document.getElementById(step.targetId);
+            if(primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
+        }
+
+        if(primaryTargetEl) {
+            primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => { 
+                const rect = primaryTargetEl.getBoundingClientRect();
+                const tourArrow = modal.querySelector('.tour-arrow');
+
+                if (step.targetCol) {
+                    const isLeftHalf = rect.left < window.innerWidth / 2;
+                    modal.style.top = '15%'; 
                     
+                    if (isLeftHalf) {
+                        modal.style.left = (rect.right + 25) + 'px'; 
+                        tourArrow.style.top = '30px';
+                        tourArrow.style.left = '-15px';
+                        tourArrow.style.borderTop = '15px solid transparent';
+                        tourArrow.style.borderBottom = '15px solid transparent';
+                        tourArrow.style.borderRight = '15px solid #ffffff'; 
+                        tourArrow.style.borderLeft = 'none';
+                    } else {
+                        modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
+                        tourArrow.style.top = '30px';
+                        tourArrow.style.left = '100%';
+                        tourArrow.style.borderTop = '15px solid transparent';
+                        tourArrow.style.borderBottom = '15px solid transparent';
+                        tourArrow.style.borderLeft = '15px solid #ffffff'; 
+                        tourArrow.style.borderRight = 'none';
+                    }
+                } else {
+                    const targetCenter = rect.top + (rect.height / 2);
                     if (targetCenter < window.innerHeight / 2) {
                         modal.style.top = (rect.bottom + window.scrollY + 20) + 'px'; 
                         modal.style.left = Math.max(20, rect.left) + 'px'; 
-                        
                         tourArrow.style.top = '-15px';
                         tourArrow.style.left = '30px';
                         tourArrow.style.borderBottom = '15px solid #f8fafc'; 
                         tourArrow.style.borderTop = 'none';
+                        tourArrow.style.borderLeft = '15px solid transparent';
+                        tourArrow.style.borderRight = '15px solid transparent';
                     } else {
                         modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
                         modal.style.left = Math.max(20, rect.left) + 'px';
-                        
                         tourArrow.style.top = '100%'; 
                         tourArrow.style.left = '30px';
                         tourArrow.style.borderTop = '15px solid #ffffff'; 
                         tourArrow.style.borderBottom = 'none';
+                        tourArrow.style.borderLeft = '15px solid transparent';
+                        tourArrow.style.borderRight = '15px solid transparent';
                     }
-                }, 150); 
-            }
+                }
+            }, 150); 
         }
 
         titleEl.innerHTML = step.title;
-        textEl.innerHTML = step.text;
+        // Inject Text + Accordion
+        textEl.innerHTML = step.text + getAccordionHTML(step.title);
         
+        // Re-attach Accordion Event Listener to new HTML
+        const accBtn = document.getElementById('tour-accordion-btn');
+        accBtn.addEventListener('click', function() {
+            const accContent = document.getElementById('tour-accordion-content');
+            accContent.classList.toggle('show');
+            accBtn.classList.toggle('active'); // Toggles the chevron rotation
+            if(accContent.classList.contains('show')) {
+                setTimeout(() => textEl.scrollTop = textEl.scrollHeight, 50);
+            }
+        });
+
         counterEl.textContent = `${currentStep + 1} of ${tourData.length}`;
         const progressPercentage = ((currentStep + 1) / tourData.length) * 100;
         progressBar.style.width = `${progressPercentage}%`;
 
-        btnPrev.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
-        btnNext.innerHTML = currentStep === tourData.length - 1 ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        document.getElementById('tour-prev').style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+        document.getElementById('tour-next').innerHTML = currentStep === tourData.length - 1 ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
     }
 
     function endTour() {
@@ -333,13 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
     }
 
-    btnStart.addEventListener('click', () => {
+    document.getElementById('start-tour-btn').addEventListener('click', () => {
         currentStep = 0;
         modal.classList.remove('hidden');
         updateTour();
     });
 
-    btnNext.addEventListener('click', () => {
+    document.getElementById('tour-next').addEventListener('click', () => {
         if (currentStep < tourData.length - 1) {
             currentStep++;
             updateTour();
@@ -348,13 +436,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    btnPrev.addEventListener('click', () => {
+    document.getElementById('tour-prev').addEventListener('click', () => {
         if (currentStep > 0) {
             currentStep--;
             updateTour();
         }
     });
 
-    btnClose.addEventListener('click', endTour); 
+    document.getElementById('tour-close').addEventListener('click', endTour); 
     backdrop.addEventListener('click', endTour); 
 });

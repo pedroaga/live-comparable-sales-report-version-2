@@ -16,7 +16,7 @@
         
         <div class="report-header" id="target-header">
             <div class="title-section">
-                <img src="https://propertytaxadvisors.com/wp-content/uploads/2026/04/Assessify-logo-1.png" alt="Assessify Logo" class="company-logo">
+                <img src="https://propertytaxadvisors.com/wp-content/uploads/2026/04/Assessify-logo.png" alt="Assessify Logo" class="company-logo">
                 <h1>Comparable Sales Report</h1>
                 <span class="tax-year">Tax Year: 2024</span>
             </div>
@@ -40,11 +40,11 @@
             <table class="comp-grid">
                 <thead id="target-grid-head">
                     <tr>
-                        <th data-col="0">Features</th>
-                        <th data-col="1" class="subject-header" id="target-subj-col">Subject Property</th>
-                        <th data-col="2" class="comp-header" id="target-comp1">Comp 1</th>
-                        <th data-col="3" class="comp-header" id="target-comp2">Comp 2</th>
-                        <th data-col="4" class="comp-header" id="target-comp3">Comp 3</th>
+                        <th data-col="0">FEATURES</th>
+                        <th data-col="1" class="subject-header" id="target-subj-col">SUBJECT PROPERTY</th>
+                        <th data-col="2" class="comp-header" id="target-comp1">COMPARABLE SALE 1</th>
+                        <th data-col="3" class="comp-header" id="target-comp2">COMPARABLE SALE 2</th>
+                        <th data-col="4" class="comp-header" id="target-comp3">COMPARABLE SALE 3</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -161,14 +161,14 @@
                         <td data-col="4">Single Family Residence</td>
                     </tr>
                     
-                    <tr class="highlight-row" id="target-total-net">
+                    <tr class="highlight-row-net" id="target-total-net">
                         <td data-col="0"><strong>Total Net Adjustment</strong></td>
                         <td data-col="1">--</td>
                         <td data-col="2"><strong>$104,000</strong></td>
                         <td data-col="3" class="text-red"><strong>($8,000)</strong></td>
                         <td data-col="4" class="text-red"><strong>($14,000)</strong></td>
                     </tr>
-                    <tr class="highlight-row" id="target-final-adj">
+                    <tr class="highlight-row-final" id="target-final-adj">
                         <td data-col="0"><strong>Final Adjusted Value</strong></td>
                         <td data-col="1">--</td>
                         <td data-col="2"><strong>1,204,000</strong></td>
@@ -194,6 +194,11 @@
         </div>
 
         <div class="bottom-section">
+            <div class="final-value-card" id="target-final-val">
+                <h4>FINAL VALUE INDICATED BY MARKET APPROACH</h4>
+                <div class="value-amount">$1,217,000</div>
+            </div>
+
             <div class="notes-panel" id="target-notes">
                 <h3><i class="fa-solid fa-clipboard-list"></i> Notes</h3>
                 <ul>
@@ -201,11 +206,6 @@
                     <li>Comp 1 (105 ft away): sold $1.10M → adjusted $1.204M; inferior (smaller, fewer beds/baths), still below roll value.</li>
                     <li>Comp 2 ($1.312M adj., near lien date) & Comp 3 ($1.136M adj.) bracket value → support ~$1.217M conclusion.</li>
                 </ul>
-            </div>
-
-            <div class="final-value-card" id="target-final-val">
-                <h4>FINAL VALUE INDICATED BY MARKET APPROACH</h4>
-                <div class="value-amount">$1,217,000</div>
             </div>
         </div>
     </div>
@@ -223,8 +223,10 @@
             <div id="tour-progress-bar" class="tour-progress-bar"></div>
         </div>
     </div>
+    
     <div class="tour-content" id="tour-content-text">
         </div>
+
     <div class="tour-controls">
         <button id="tour-prev" class="btn-tour-nav"><i class="fa-solid fa-chevron-left"></i> Previous</button>
         <button id="tour-next" class="btn-tour-primary">Next <i class="fa-solid fa-chevron-right"></i></button>
