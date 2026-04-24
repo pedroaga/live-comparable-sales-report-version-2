@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- Table Hovers ---
     const tableCells = document.querySelectorAll('.comp-grid td, .comp-grid th');
     tableCells.forEach(cell => {
         cell.addEventListener('mouseenter', () => {
@@ -14,8 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- Tour Data Definitions ---
     const tourData = [
-        // STEP 0: Introduction (Special handling in JS logic below)
+        // STEP 0: Intro
         {
             isIntro: true,
             title: "Welcome to your Walk-Through",
@@ -36,9 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </ul>
             `
         },
-        // STEPS 1-15 (Visible in Progress Bar)
+        // STEPS 1-15 
         {
-            targetId: "target-full-grid", // Highlights entire grid instead of header
+            targetId: "target-full-grid", 
+            centerOnTarget: true,     // Centers modal, hides arrow
+            isDraggable: true,        // Shows drag handle
             title: "Purpose of a Comparable Sales Report",
             text: `
                 <p>A Comparable Sales Report is a market-based valuation analysis. <strong>Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</strong></p>
@@ -124,7 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,100,000 + $104,000 = $1,204,000
                 </p>
                 <p><strong>Explanation:</strong> Comp 1 sold for $1.1M, but it was inferior to the subject in several important ways. After adjusting it as though it had the subject’s bedroom count, bathroom count, size, and lot size, it indicates the subject would be worth about $1,204,000.</p>
-                <a class="quick-link" data-step="4"><i class="fa-solid fa-rotate-left"></i> Review Adjustment Rules</a>
+                
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Review Adjustment Rules</a>
+                </div>
             `
         },
         {
@@ -191,7 +199,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This number reflects the overall difference between the comparable and the subject after considering the adjusted features.</p>
                 <p>A positive net adjustment means the comparable was overall inferior to the subject. A negative net adjustment means the comparable was overall superior to the subject.</p>
-                <a class="quick-link" data-step="4"><i class="fa-solid fa-calculator"></i> Revisit Adjustment Rules</a>
+
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Revisit Adjustment Rules</a>
+                </div>
             `
         },
         {
@@ -261,7 +273,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This means the report supports the position that the property was enrolled $135,520 above market value as of January 1, 2024.</p>
                 <p>That difference is what supports the Prop 8 assessment reduction request.</p>
-                <a class="quick-link" data-step="13"><i class="fa-solid fa-arrow-left-long"></i> See how final value was calculated</a>
+                
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="13"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> See how final value was calculated</a>
+                </div>
             `
         },
         {
@@ -303,8 +319,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const counterEl = document.getElementById('tour-counter');
     const progressBar = document.getElementById('tour-progress-bar');
     const accordionContainer = document.getElementById('tour-accordion-container');
+    const dragHandle = document.getElementById('tour-drag-handle');
+    const tourArrow = modal.querySelector('.tour-arrow');
     
-    // Global listener for Quick Links inserted dynamically
+    // --- Draggable Logic for the modal ---
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    dragHandle.onmousedown = dragMouseDown;
+
+    function dragMouseDown(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        dragHandle.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none'; // Prevent accidental text selection
+    }
+
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        modal.style.top = (modal.offsetTop - pos2) + "px";
+        modal.style.left = (modal.offsetLeft - pos1) + "px";
+        // Override any existing CSS translate transforms so manual coordinates apply cleanly
+        modal.style.transform = 'none'; 
+    }
+
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        dragHandle.style.cursor = 'grab';
+        document.body.style.userSelect = '';
+    }
+
+    // --- Quick Link Delegation ---
     document.addEventListener('click', function(e) {
         const link = e.target.closest('.quick-link');
         if (link) {
@@ -317,7 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Reusable, Redesigned Accordion Template
     const getAccordionHTML = (titleText) => `
         <div class="tour-accordion">
             <button class="accordion-header" id="tour-accordion-btn">
@@ -338,7 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const step = tourData[currentStep];
         const btnPrev = document.getElementById('tour-prev');
         const btnNext = document.getElementById('tour-next');
-        const tourArrow = modal.querySelector('.tour-arrow');
         
         backdrop.classList.remove('hidden');
         document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
@@ -346,19 +397,17 @@ document.addEventListener('DOMContentLoaded', () => {
         textEl.scrollTop = 0;
         let primaryTargetEl = null;
 
-        // Check if intro logic should trigger
         if (step.isIntro) {
-            // Center the modal
+            // STEP 0: Introduction Logic
             modal.style.top = '50%';
             modal.style.left = '50%';
             modal.style.transform = 'translate(-50%, -50%)';
             
-            // Hide elements
             tourArrow.style.display = 'none';
+            dragHandle.style.display = 'none';
             accordionContainer.style.display = 'none';
             btnPrev.style.display = 'none';
             
-            // Format Intro states
             btnNext.innerHTML = 'Get Started <i class="fa-solid fa-arrow-right"></i>';
             counterEl.textContent = 'Introduction';
             progressBar.style.width = '0%';
@@ -367,14 +416,16 @@ document.addEventListener('DOMContentLoaded', () => {
             textEl.innerHTML = step.text;
             
         } else {
-            // Standard placement for steps 1-15
-            modal.style.transform = 'none';
+            // STEPS 1-15 Logic
             tourArrow.style.display = 'block';
             accordionContainer.style.display = 'block';
             btnPrev.style.display = 'inline-block';
             btnPrev.style.visibility = 'visible';
+            
+            // Clean up transformations and drag display defaults
+            modal.style.transform = 'none';
+            dragHandle.style.display = 'none'; 
 
-            // Highlight Target logic
             if (step.targetCol) {
                 const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
                 columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
@@ -384,14 +435,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
             }
 
-            // Placement calculation
             if(primaryTargetEl) {
                 primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                 setTimeout(() => { 
                     const rect = primaryTargetEl.getBoundingClientRect();
                     
-                    if (step.targetCol) {
+                    if (step.centerOnTarget) {
+                        // Modal goes dead center
+                        modal.style.top = (rect.top + window.scrollY + (rect.height / 2)) + 'px';
+                        modal.style.left = (rect.left + (rect.width / 2)) + 'px';
+                        modal.style.transform = 'translate(-50%, -50%)';
+                        tourArrow.style.display = 'none';
+                        
+                        if (step.isDraggable) {
+                            dragHandle.style.display = 'inline-block';
+                        }
+                    } else if (step.targetCol) {
+                        // Columns place left/right
                         const isLeftHalf = rect.left < window.innerWidth / 2;
                         modal.style.top = '15%'; 
                         
@@ -413,6 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             tourArrow.style.borderRight = 'none';
                         }
                     } else {
+                        // Standard top/bottom placement
                         const targetCenter = rect.top + (rect.height / 2);
                         if (targetCenter < window.innerHeight / 2) {
                             modal.style.top = (rect.bottom + window.scrollY + 20) + 'px'; 
@@ -451,9 +513,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Adjust Counter Logic to ignore intro step
-            let displayStep = currentStep; // Since intro is 0, array index 1 becomes step 1
-            let totalSteps = tourData.length - 1; // Subtract 1 for intro
+            let displayStep = currentStep;
+            let totalSteps = tourData.length - 1; 
 
             counterEl.textContent = `${displayStep} of ${totalSteps}`;
             const progressPercentage = (displayStep / totalSteps) * 100;
