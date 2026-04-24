@@ -16,7 +16,7 @@
         
         <div class="report-header" id="target-header">
             <div class="title-section">
-                <img src="https://i.ibb.co/rGjBG4vf/Assessify-logo-2.png" alt="Assessify Logo" class="company-logo">
+                <img src="https://propertytaxadvisors.com/wp-content/uploads/2026/04/Assessify-logo.png" alt="Assessify Logo" class="company-logo">
                 <h1>Comparable Sales Report</h1>
                 <span class="tax-year">Tax Year: 2024</span>
             </div>
@@ -213,11 +213,15 @@
 
 <div id="tour-modal" class="tour-modal hidden no-print">
     <div class="tour-arrow"></div>
-    <div class="tour-header">
+    <div class="tour-header" id="tour-header-drag-zone">
         <div class="tour-header-top">
             <span id="tour-counter" class="tour-counter">Introduction</span>
             <h2 id="tour-step-title">Title Goes Here</h2>
-            <button id="tour-close" class="tour-close"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="tour-header-actions">
+                <button id="tour-drag-handle" class="tour-drag-handle hidden" title="Click and drag to move modal"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+                <button id="tour-close" class="tour-close" title="Close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         <div class="tour-progress-track">
             <div id="tour-progress-bar" class="tour-progress-bar"></div>
