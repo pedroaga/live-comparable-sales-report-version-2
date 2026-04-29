@@ -39,7 +39,7 @@ body {
     margin-bottom: 1rem;
 }
 .title-section { display: flex; flex-direction: column; align-items: flex-start; }
-.company-logo { height: 35px; margin-bottom: 0.95rem; object-fit: contain; }
+.company-logo { height: 40px; margin-bottom: 0.85rem; object-fit: contain; }
 .title-section h1 { margin-bottom: 0.25rem; font-size: 1.2rem; color: var(--brand-navy); }
 .tax-year { font-size: 1rem; color: var(--brand-blue); font-weight: 600; }
 .meta-section { text-align: right; }
@@ -195,7 +195,7 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
     .report-container { box-shadow: none; padding: 0; margin: 0; max-width: 100%; width: 100%; }
 
     .report-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 0.1rem; margin-bottom: 0.25rem; }
-    .company-logo { height: 35px; margin-bottom: 0.95rem; }
+    .company-logo { height: 40px; margin-bottom: 0.85rem; }
     .title-section h1 { font-size: 12pt; margin-bottom: 0.25rem; color: #0f172a; line-height: 1.1; }
     .tax-year { font-size: 9pt; color: #2563eb; }
     .meta-section { text-align: right; }
