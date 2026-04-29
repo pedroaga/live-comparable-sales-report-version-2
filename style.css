@@ -39,7 +39,7 @@ body {
     margin-bottom: 1rem;
 }
 .title-section { display: flex; flex-direction: column; align-items: flex-start; }
-.company-logo { height: 40px; margin-bottom: 0.85rem; object-fit: contain; }
+.company-logo { height: 36px; margin-bottom: 0.85rem; object-fit: contain; }
 .title-section h1 { margin-bottom: 0.25rem; font-size: 1.15rem; color: var(--brand-navy); line-height: 1.2; }
 .tax-year { font-size: 1rem; color: #46474d; font-weight: 600; }
 .meta-section { text-align: right; }
@@ -80,7 +80,7 @@ body {
 /* --- Bottom Section --- */
 .bottom-section { display: flex; gap: 1.5rem; align-items: stretch; }
 .notes-panel { flex: 2; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 4px; padding: 1rem 1.25rem; font-size: 0.85rem; }
-.notes-panel h3 { margin-top: 0; font-size: 1.1rem; color: #0f172a; margin-bottom: 0.75rem; }
+.notes-panel h3 { margin-top: 0; font-size: 1.2rem; color: #0f172a; margin-bottom: 0.75rem; }
 .notes-panel ul { margin: 0; padding-left: 1.2rem; line-height: 1.5; }
 .notes-panel li { margin-bottom: 0.4rem; }
 .final-value-card { flex: 1; background: #f8fafc; color: var(--text-main); border-radius: 4px; padding: 1rem 1.25rem; text-align: center; display: flex; flex-direction: column; justify-content: center; border: 1px solid #e2e8f0; border-bottom: 5px solid var(--brand-blue); }
@@ -195,7 +195,7 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
     .report-container { box-shadow: none; padding: 0; margin: 0; max-width: 100%; width: 100%; }
 
     .report-header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid #0f172a; padding-bottom: 0.1rem; margin-bottom: 0.25rem; }
-    .company-logo { height: 40px; margin-bottom: 0.85rem; }
+    .company-logo { height: 36px; margin-bottom: 0.85rem; }
     .title-section h1 { font-size: 12pt; margin-bottom: 0.25rem; color: #0f172a; line-height: 1.2; }
     .tax-year { font-size: 9pt; color: #46474d; margin-bottom: 0.25rem; }
     .meta-section { text-align: right; }
@@ -218,7 +218,7 @@ div.tour-highlight-active, tr.tour-highlight-active { position: relative; z-inde
 
     .bottom-section { display: flex; gap: 1rem; align-items: stretch; }
     .notes-panel { flex: 2; border: 1px solid #e2e8f0 !important; padding: 0.5rem 0.75rem !important; background: #ffffff !important; }
-    .notes-panel h3 { margin: 0 0 0.2rem 0; font-size: 9pt; color: #0f172a; }
+    .notes-panel h3 { margin: 0 0 0.2rem 0; font-size: 9.5pt; color: #0f172a; }
     .notes-panel ul { margin: 0; padding-left: 1rem; }
     .notes-panel li { margin-bottom: 0; font-size: 7.5pt; line-height: 1.45; } 
 
