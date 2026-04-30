@@ -1,245 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparable Sales Report</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Los Canelos Munchies — Register</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-<div id="tour-backdrop" class="tour-backdrop hidden"></div>
-
-<div class="report-wrapper">
-    <div class="report-container">
-        
-        <div class="report-header" id="target-header">
-            <div class="title-section">
-                <img src="https://i.ibb.co/rGjBG4vf/Assessify-logo-2.png" alt="Assessify Logo" class="company-logo">
-                <h1>Comparable Sales Report Explained</h1>
-                <span class="tax-year">Fiscal Year: 2024/2025</span>
-            </div>
-            <div class="meta-section">
-                <p><strong>Application Name:</strong> John Doe</p>
-                <p><strong>Application #:</strong> 12345-ABC</p>
-                <p><strong>Hearing Date:</strong> October 15, 2024</p>
-            </div>
-        </div>
-
-        <div class="action-buttons no-print">
-            <button id="start-tour-btn" class="btn-primary">
-                <i class="fa-solid fa-graduation-cap"></i> Walk Through Report
-            </button>
-            <button onclick="window.print()" class="btn-secondary">
-                <i class="fa-solid fa-file-pdf"></i> Print/Download Report
-            </button>
-        </div>
-
-        <div class="table-wrapper" id="target-full-grid">
-            <table class="comp-grid">
-                <thead id="target-grid-head">
-                    <tr>
-                        <th data-col="0">FEATURES</th>
-                        <th data-col="1" class="subject-header" id="target-subj-col">SUBJECT PROPERTY</th>
-                        <th data-col="2" class="comp-header" id="target-comp1">COMPARABLE SALE 1</th>
-                        <th data-col="3" class="comp-header" id="target-comp2">COMPARABLE SALE 2</th>
-                        <th data-col="4" class="comp-header" id="target-comp3">COMPARABLE SALE 3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="address-row">
-                        <td data-col="0"><strong>Address</strong></td>
-                        <td data-col="1">25131 Rivendell Dr</td>
-                        <td data-col="2">25141 Rivendell</td>
-                        <td data-col="3">25071 Castlewood</td>
-                        <td data-col="4">25131 Carolwood</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">APN # <br><span class="sub-label">MLS #</span></td>
-                        <td data-col="1">614-083-07</td>
-                        <td data-col="2">614-083-09 <br><span class="sub-label">OC23041543</span></td>
-                        <td data-col="3">614-551-33 <br><span class="sub-label">OC24025411</span></td>
-                        <td data-col="4">614-551-14 <br><span class="sub-label">IV23145161</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Proximity to Subject</td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">105.6 feet</td>
-                        <td data-col="3">0.27 miles</td>
-                        <td data-col="4">0.29 miles</td>
-                    </tr>
-                    <tr id="target-roll-val">
-                        <td data-col="0">Roll Value | Sales Price <br><span class="val-rate">$692</span></td>
-                        <td data-col="1"><strong>$1,352,520</strong></td>
-                        <td data-col="2"><strong>$1,100,000</strong> <br><span class="sub-label">648 p/sqft</span></td>
-                        <td data-col="3"><strong>$1,320,000</strong> <br><span class="sub-label">650 p/sqft</span></td>
-                        <td data-col="4"><strong>$1,150,000</strong> <br><span class="sub-label">566 p/sqft</span></td>
-                    </tr>
-                    <tr class="subheader-row" id="target-adj-header">
-                        <td data-col="0"><strong>VALUE ADJUSTMENTS</strong></td>
-                        <td data-col="1">Description</td>
-                        <td data-col="2">Description <span class="adj-header">+(-) Adjustments</span></td>
-                        <td data-col="3">Description <span class="adj-header">+(-) Adjustments</span></td>
-                        <td data-col="4">Description <span class="adj-header">+(-) Adjustments</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Lien Date | Sale Date (%/mo.adj) <br><span class="val-rate">1% / Mo.</span></td>
-                        <td data-col="1">1/1/2024</td>
-                        <td data-col="2">04/11/2023</td>
-                        <td data-col="3">03/11/2024</td>
-                        <td data-col="4">10/11/2023</td>
-                    </tr>
-                    <tr id="target-add-rows">
-                        <td data-col="0">View</td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">Neighborhood Park/Greenbelt</td>
-                        <td data-col="3">Trees/Woods</td>
-                        <td data-col="4">Trees/Woods</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Year Built (% difference)</td>
-                        <td data-col="1">1969</td>
-                        <td data-col="2">1969</td>
-                        <td data-col="3">1979</td>
-                        <td data-col="4">1979</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Bed <span class="val-rate">$20,000</span></td>
-                        <td data-col="1">4</td>
-                        <td data-col="2">3 <span class="adj-plus">$20,000</span></td>
-                        <td data-col="3">3 <span class="adj-plus">$20,000</span></td>
-                        <td data-col="4">3 <span class="adj-plus">$20,000</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Bath <span class="val-rate">$20,000</span></td>
-                        <td data-col="1">2</td>
-                        <td data-col="2">1 <span class="adj-plus">$20,000</span></td>
-                        <td data-col="3">2</td>
-                        <td data-col="4">2</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Improvement Size <span class="val-rate">$208</span></td>
-                        <td data-col="1">1,955</td>
-                        <td data-col="2">1,697 <span class="adj-plus">$54,000</span></td>
-                        <td data-col="3">2,032 <span class="adj-minus">($16,000)</span></td>
-                        <td data-col="4">2,032 <span class="adj-minus">($16,000)</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Lot Area <span class="val-rate">$27,050</span></td>
-                        <td data-col="1">6,120</td>
-                        <td data-col="2">5,400 <span class="adj-plus">$10,000</span></td>
-                        <td data-col="3">7,000 <span class="adj-minus">($12,000)</span></td>
-                        <td data-col="4">7,400 <span class="adj-minus">($18,000)</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Remodeled / Condition</td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">-- <span class="adj-zero">($0)</span></td>
-                        <td data-col="3">-- <span class="adj-zero">($0)</span></td>
-                        <td data-col="4">-- <span class="adj-zero">($0)</span></td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Pool <span class="val-rate">$50,000</span></td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">--</td>
-                        <td data-col="3">--</td>
-                        <td data-col="4">--</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Noise/Traffic <span class="val-rate">1%</span></td>
-                        <td data-col="1">No</td>
-                        <td data-col="2">No</td>
-                        <td data-col="3">No</td>
-                        <td data-col="4">No</td>
-                    </tr>
-                    <tr>
-                        <td data-col="0">Property Sub Type</td>
-                        <td data-col="1">SingleFamily</td>
-                        <td data-col="2">Single Family Residence</td>
-                        <td data-col="3">Single Family Residence</td>
-                        <td data-col="4">Single Family Residence</td>
-                    </tr>
-                    
-                    <tr class="highlight-row-net" id="target-total-net">
-                        <td data-col="0"><strong>Total Net Adjustment</strong></td>
-                        <td data-col="1">--</td>
-                        <td data-col="2"><strong>$104,000</strong></td>
-                        <td data-col="3" class="text-red"><strong>($8,000)</strong></td>
-                        <td data-col="4" class="text-red"><strong>($14,000)</strong></td>
-                    </tr>
-                    <tr class="highlight-row-final" id="target-final-adj">
-                        <td data-col="0"><strong>Final Adjusted Value</strong></td>
-                        <td data-col="1">--</td>
-                        <td data-col="2"><strong>1,204,000</strong></td>
-                        <td data-col="3"><strong>1,312,000</strong></td>
-                        <td data-col="4"><strong>1,136,000</strong></td>
-                    </tr>
-                    <tr id="target-adj-sqft">
-                        <td data-col="0">Adj $/Sqft (SUBJ)</td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">616</td>
-                        <td data-col="3">671</td>
-                        <td data-col="4">581</td>
-                    </tr>
-                    <tr id="target-weight">
-                        <td data-col="0">Weighted</td>
-                        <td data-col="1">--</td>
-                        <td data-col="2">33%</td>
-                        <td data-col="3">33%</td>
-                        <td data-col="4">33%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="bottom-section">
-            <div class="final-value-card" id="target-final-val">
-                <h4>FINAL VALUE INDICATED BY MARKET APPROACH</h4>
-                <div class="value-amount">$1,217,000</div>
-            </div>
-
-            <div class="notes-panel" id="target-notes">
-                <h3><i class="fa-solid fa-solidLarge fa-circle-check"></i> Notes</h3>
-                <ul>
-                    <li>Assessed $1,352,520 vs. supported $1,217,000 → ~$135K overvaluation as of 1/1/2024.</li>
-                    <li>Comp 1 (105 ft away): sold $1.10M → adjusted $1.204M; inferior (smaller, fewer beds/baths), still below roll value.</li>
-                    <li>Comp 2 ($1.312M adj., near lien date) & Comp 3 ($1.136M adj.) bracket value → support ~$1.217M conclusion.</li>
-                </ul>
-            </div>
-        </div>
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="header">
+    <div class="header-brand">
+      <img
+        class="header-logo"
+        src="https://i.ibb.co/vxHrGVKL/los-canelos-2.png"
+        alt="Los Canelos Munchies"
+        onerror="this.style.display='none';document.getElementById('headerFallback').style.display='block';"
+      />
+      <div class="header-fallback" id="headerFallback">
+        <span class="header-label">Register</span>
+        <span class="header-title">LOS CANELOS MUNCHIES</span>
+      </div>
     </div>
-</div>
+    <span class="header-time" id="clock"></span>
+  </div>
 
-<div id="tour-modal" class="tour-modal hidden no-print">
-    <div class="tour-arrow"></div>
-    <div class="tour-header" id="tour-header-drag-zone">
-        <div class="tour-header-top">
-            <span id="tour-counter" class="tour-counter">Introduction</span>
-            <h2 id="tour-step-title">Title Goes Here</h2>
-            
-            <div class="tour-header-actions">
-                <button id="tour-drag-handle" class="tour-drag-handle hidden" title="Click and drag to move modal"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
-                <button id="tour-close" class="tour-close" title="Close"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-        </div>
-        <div class="tour-progress-track">
-            <div id="tour-progress-bar" class="tour-progress-bar"></div>
-        </div>
+  <!-- ── Restored session banner ───────────────────────────── -->
+  <div class="saved-banner" id="savedBanner" style="display:none;">
+    <span>💾 Session restored from last visit</span>
+    <button class="banner-dismiss" id="bannerDismiss">✕</button>
+  </div>
+
+  <!-- ── Items ─────────────────────────────────────────────── -->
+  <div class="items-list" id="itemsList">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- ── Order Total ───────────────────────────────────────── -->
+  <div class="total-box">
+    <div class="total-row">
+      <span class="total-label">ORDER TOTAL</span>
+      <span class="total-amount" id="totalAmount">$0.00</span>
     </div>
-    
-    <div class="tour-content" id="tour-content-text">
-        </div>
 
-    <div id="tour-accordion-container">
-        </div>
-
-    <div class="tour-controls">
-        <button id="tour-prev" class="btn-tour-nav"><i class="fa-solid fa-chevron-left"></i> Previous</button>
-        <button id="tour-next" class="btn-tour-primary">Next <i class="fa-solid fa-chevron-right"></i></button>
+    <!-- Payment type toggle -->
+    <div class="pay-toggle">
+      <button class="pay-btn active" id="btnCash">CASH</button>
+      <button class="pay-btn"       id="btnCredit">CREDIT (Zelle)</button>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <!-- Cash tendered (cash only) -->
+    <div class="cash-section" id="cashSection">
+      <div class="section-label">CASH GIVEN</div>
+      <div class="bill-row">
+        <button class="bill-btn" data-val="1">$1</button>
+        <button class="bill-btn" data-val="5">$5</button>
+        <button class="bill-btn" data-val="10">$10</button>
+        <button class="bill-btn" data-val="20">$20</button>
+        <button class="bill-btn" data-val="50">$50</button>
+        <button class="bill-btn" data-val="100">$100</button>
+        <input type="number" class="bill-custom" id="tenderedInput" placeholder="custom" min="0" step="0.01" />
+      </div>
+      <div class="change-box" id="changeBox" style="display:none;">
+        <span class="change-label" id="changeLabel">CHANGE DUE</span>
+        <span class="change-amount" id="changeAmount">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Action Buttons ────────────────────────────────────── -->
+  <div class="action-grid">
+    <button class="action-btn btn-clear"    id="btnClear">CLEAR</button>
+    <button class="action-btn btn-complete" id="btnComplete" disabled>COMPLETE</button>
+    <button class="action-btn btn-receipt"  id="btnReceipt"  disabled>RECEIPT LIST</button>
+    <button class="action-btn btn-summary"  id="btnSummary"  disabled>SUMMARY</button>
+  </div>
+
+  <!-- ── Orders count badge ─────────────────────────────────── -->
+  <div class="order-badge" id="orderBadge" style="display:none;"></div>
+
+  <!-- ── PIN Modal ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="pinOverlay" style="display:none;">
+    <div class="modal-box">
+      <div class="modal-eyebrow">Wrap This Bitch Up</div>
+      <div class="modal-title">Enter PIN</div>
+      <input type="password" class="pin-input" id="pinInput" maxlength="4" autocomplete="off" />
+      <div class="pin-error" id="pinError" style="display:none;">Incorrect PIN Fucker</div>
+      <div class="modal-actions">
+        <button class="modal-cancel"  id="pinCancel">Cancel</button>
+        <button class="modal-confirm" id="pinConfirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
