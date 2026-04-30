@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- Table Hovers ---
+    // --- Table Hovers (skip on touch/mobile) ---
     const tableCells = document.querySelectorAll('.comp-grid td, .comp-grid th');
     tableCells.forEach(cell => {
         cell.addEventListener('mouseenter', () => {
+            if (window.innerWidth <= 768) return;
             const colIndex = cell.getAttribute('data-col');
             if (colIndex !== "0") { 
                 document.querySelectorAll(`.comp-grid [data-col="${colIndex}"]`).forEach(el => el.classList.add('hover-col'));
@@ -38,15 +39,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 </ul>
             `
         },
-        // STEPS 1-15 
         {
             targetId: "target-full-grid", 
-            centerOnTarget: true,     // Centers modal, hides arrow
-            isDraggable: true,        // Shows drag handle
+            centerOnTarget: true,
+            isDraggable: true,
             title: "Purpose of a Comparable Sales Report",
             text: `
                 <p>A Comparable Sales Report is a market-based valuation analysis. <strong>Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</strong></p>
-                <p>In a Prop 8 appeal, this report is used to show that the county’s enrolled value is too high. If the report supports a value lower than the assessed value on the roll, <strong>that difference may justify a temporary reduction under Proposition 8</strong>. A decline-in-value appeal applies when the property’s assessed value exceeds its fair market value, and that the relevant valuation date is January 1, also known as the <strong>lien date</strong>.</p>
+                <p>In a Prop 8 appeal, this report is used to show that the county's enrolled value is too high. If the report supports a value lower than the assessed value on the roll, <strong>that difference may justify a temporary reduction under Proposition 8</strong>. A decline-in-value appeal applies when the property's assessed value exceeds its fair market value, and that the relevant valuation date is January 1, also known as the <strong>lien date</strong>.</p>
                 <p style="color: var(--brand-blue); font-weight: bold; margin-top: 1.5rem;">
                     <i class="fa-solid fa-lightbulb"></i> FOR EXAMPLE, IN YOUR CASE:
                 </p>
@@ -127,8 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> +$104,000<br>
                     <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,100,000 + $104,000 = $1,204,000
                 </p>
-                <p><strong>Explanation:</strong> Comp 1 sold for $1.1M, but it was inferior to the subject in several important ways. After adjusting it as though it had the subject’s bedroom count, bathroom count, size, and lot size, it indicates the subject would be worth about $1,204,000.</p>
-                
+                <p><strong>Explanation:</strong> Comp 1 sold for $1.1M, but it was inferior to the subject in several important ways. After adjusting it as though it had the subject's bedroom count, bathroom count, size, and lot size, it indicates the subject would be worth about $1,204,000.</p>
                 <div class="quick-links-container">
                     <div class="quick-links-title">Helpful References</div>
                     <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Review Adjustment Rules</a>
@@ -199,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This number reflects the overall difference between the comparable and the subject after considering the adjusted features.</p>
                 <p>A positive net adjustment means the comparable was overall inferior to the subject. A negative net adjustment means the comparable was overall superior to the subject.</p>
-
                 <div class="quick-links-container">
                     <div class="quick-links-title">Helpful References</div>
                     <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Revisit Adjustment Rules</a>
@@ -257,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p style="font-size: 1.1rem; color: #1e293b;">
                     <strong><i class="fa-solid fa-flag-checkered text-blue"></i> Final Value Indicated By Market Approach: $1,217,000</strong>
                 </p>
-                <p>This is the report’s final opinion of the subject property’s market value as of the lien date.</p>
+                <p>This is the report's final opinion of the subject property's market value as of the lien date.</p>
             `
         },
         {
@@ -273,7 +271,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </table>
                 <p>This means the report supports the position that the property was enrolled $135,520 above market value as of January 1, 2024.</p>
                 <p>That difference is what supports the Prop 8 assessment reduction request.</p>
-                
                 <div class="quick-links-container">
                     <div class="quick-links-title">Helpful References</div>
                     <a class="quick-link" data-step="13"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> See how final value was calculated</a>
@@ -321,12 +318,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const accordionContainer = document.getElementById('tour-accordion-container');
     const dragHandle = document.getElementById('tour-drag-handle');
     const tourArrow = modal.querySelector('.tour-arrow');
-    
-    // --- Draggable Logic for the modal ---
+
+    const isMobile = () => window.innerWidth <= 768;
+
+    // --- Draggable Logic (desktop only) ---
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     dragHandle.onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
+        if (isMobile()) return;
         e = e || window.event;
         e.preventDefault();
         pos3 = e.clientX;
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.onmouseup = closeDragElement;
         document.onmousemove = elementDrag;
         dragHandle.style.cursor = 'grabbing';
-        document.body.style.userSelect = 'none'; // Prevent accidental text selection
+        document.body.style.userSelect = 'none';
     }
 
     function elementDrag(e) {
@@ -346,8 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pos4 = e.clientY;
         modal.style.top = (modal.offsetTop - pos2) + "px";
         modal.style.left = (modal.offsetLeft - pos1) + "px";
-        // Override any existing CSS translate transforms so manual coordinates apply cleanly
-        modal.style.transform = 'none'; 
+        modal.style.transform = 'none';
     }
 
     function closeDragElement() {
@@ -386,140 +385,144 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     `;
 
+    function positionModalDesktop(step, primaryTargetEl) {
+        primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        setTimeout(() => {
+            const rect = primaryTargetEl.getBoundingClientRect();
+
+            if (step.centerOnTarget) {
+                modal.style.top = (rect.top + window.scrollY + (rect.height / 2)) + 'px';
+                modal.style.left = (rect.left + (rect.width / 2)) + 'px';
+                modal.style.transform = 'translate(-50%, -50%)';
+                tourArrow.style.display = 'none';
+                if (step.isDraggable) {
+                    dragHandle.style.display = 'inline-block';
+                }
+            } else if (step.targetCol) {
+                const isLeftHalf = rect.left < window.innerWidth / 2;
+                modal.style.top = '15%';
+                if (isLeftHalf) {
+                    modal.style.left = (rect.right + 25) + 'px';
+                    tourArrow.style.top = '30px';
+                    tourArrow.style.left = '-15px';
+                    tourArrow.style.borderTop = '15px solid transparent';
+                    tourArrow.style.borderBottom = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid #ffffff';
+                    tourArrow.style.borderLeft = 'none';
+                } else {
+                    modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
+                    tourArrow.style.top = '30px';
+                    tourArrow.style.left = '100%';
+                    tourArrow.style.borderTop = '15px solid transparent';
+                    tourArrow.style.borderBottom = '15px solid transparent';
+                    tourArrow.style.borderLeft = '15px solid #ffffff';
+                    tourArrow.style.borderRight = 'none';
+                }
+            } else {
+                const targetCenter = rect.top + (rect.height / 2);
+                if (targetCenter < window.innerHeight / 2) {
+                    modal.style.top = (rect.bottom + window.scrollY + 20) + 'px';
+                    modal.style.left = Math.max(20, rect.left) + 'px';
+                    tourArrow.style.top = '-15px';
+                    tourArrow.style.left = '30px';
+                    tourArrow.style.borderBottom = '15px solid #f8fafc';
+                    tourArrow.style.borderTop = 'none';
+                    tourArrow.style.borderLeft = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid transparent';
+                } else {
+                    modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
+                    modal.style.left = Math.max(20, rect.left) + 'px';
+                    tourArrow.style.top = '100%';
+                    tourArrow.style.left = '30px';
+                    tourArrow.style.borderTop = '15px solid #ffffff';
+                    tourArrow.style.borderBottom = 'none';
+                    tourArrow.style.borderLeft = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid transparent';
+                }
+            }
+        }, 150);
+    }
+
     function updateTour() {
         const step = tourData[currentStep];
         const btnPrev = document.getElementById('tour-prev');
         const btnNext = document.getElementById('tour-next');
-        
+
         backdrop.classList.remove('hidden');
         document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
-        
+
         textEl.scrollTop = 0;
         let primaryTargetEl = null;
 
         if (step.isIntro) {
-            // STEP 0: Introduction Logic
-            modal.style.top = '50%';
-            modal.style.left = '50%';
-            modal.style.transform = 'translate(-50%, -50%)';
-            
+            // On desktop: center in viewport. On mobile: CSS bottom-sheet handles it.
+            if (!isMobile()) {
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+            }
+
             tourArrow.style.display = 'none';
             dragHandle.style.display = 'none';
             accordionContainer.style.display = 'none';
             btnPrev.style.display = 'none';
-            
+
             btnNext.innerHTML = 'Get Started <i class="fa-solid fa-arrow-right"></i>';
             counterEl.textContent = 'Introduction';
             progressBar.style.width = '0%';
-            
+
             titleEl.innerHTML = step.title;
             textEl.innerHTML = step.text;
-            
+
         } else {
-            // STEPS 1-15 Logic
-            tourArrow.style.display = 'block';
+            // Steps 1+
+            // On mobile: arrow is hidden via CSS; no inline positioning needed.
+            tourArrow.style.display = isMobile() ? 'none' : 'block';
             accordionContainer.style.display = 'block';
             btnPrev.style.display = 'inline-block';
             btnPrev.style.visibility = 'visible';
-            
-            // Clean up transformations and drag display defaults
+
             modal.style.transform = 'none';
-            dragHandle.style.display = 'none'; 
+            dragHandle.style.display = 'none';
 
             if (step.targetCol) {
                 const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
                 columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
-                if(columnCells.length > 0) primaryTargetEl = columnCells[0]; 
+                if (columnCells.length > 0) primaryTargetEl = columnCells[0];
             } else if (step.targetId) {
                 primaryTargetEl = document.getElementById(step.targetId);
-                if(primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
+                if (primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
             }
 
-            if(primaryTargetEl) {
-                primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                setTimeout(() => { 
-                    const rect = primaryTargetEl.getBoundingClientRect();
-                    
-                    if (step.centerOnTarget) {
-                        // Modal goes dead center
-                        modal.style.top = (rect.top + window.scrollY + (rect.height / 2)) + 'px';
-                        modal.style.left = (rect.left + (rect.width / 2)) + 'px';
-                        modal.style.transform = 'translate(-50%, -50%)';
-                        tourArrow.style.display = 'none';
-                        
-                        if (step.isDraggable) {
-                            dragHandle.style.display = 'inline-block';
-                        }
-                    } else if (step.targetCol) {
-                        // Columns place left/right
-                        const isLeftHalf = rect.left < window.innerWidth / 2;
-                        modal.style.top = '15%'; 
-                        
-                        if (isLeftHalf) {
-                            modal.style.left = (rect.right + 25) + 'px'; 
-                            tourArrow.style.top = '30px';
-                            tourArrow.style.left = '-15px';
-                            tourArrow.style.borderTop = '15px solid transparent';
-                            tourArrow.style.borderBottom = '15px solid transparent';
-                            tourArrow.style.borderRight = '15px solid #ffffff'; 
-                            tourArrow.style.borderLeft = 'none';
-                        } else {
-                            modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
-                            tourArrow.style.top = '30px';
-                            tourArrow.style.left = '100%';
-                            tourArrow.style.borderTop = '15px solid transparent';
-                            tourArrow.style.borderBottom = '15px solid transparent';
-                            tourArrow.style.borderLeft = '15px solid #ffffff'; 
-                            tourArrow.style.borderRight = 'none';
-                        }
-                    } else {
-                        // Standard top/bottom placement
-                        const targetCenter = rect.top + (rect.height / 2);
-                        if (targetCenter < window.innerHeight / 2) {
-                            modal.style.top = (rect.bottom + window.scrollY + 20) + 'px'; 
-                            modal.style.left = Math.max(20, rect.left) + 'px'; 
-                            tourArrow.style.top = '-15px';
-                            tourArrow.style.left = '30px';
-                            tourArrow.style.borderBottom = '15px solid #f8fafc'; 
-                            tourArrow.style.borderTop = 'none';
-                            tourArrow.style.borderLeft = '15px solid transparent';
-                            tourArrow.style.borderRight = '15px solid transparent';
-                        } else {
-                            modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
-                            modal.style.left = Math.max(20, rect.left) + 'px';
-                            tourArrow.style.top = '100%'; 
-                            tourArrow.style.left = '30px';
-                            tourArrow.style.borderTop = '15px solid #ffffff'; 
-                            tourArrow.style.borderBottom = 'none';
-                            tourArrow.style.borderLeft = '15px solid transparent';
-                            tourArrow.style.borderRight = '15px solid transparent';
-                        }
-                    }
-                }, 150); 
+            if (primaryTargetEl) {
+                if (isMobile()) {
+                    // On mobile: just scroll the target into view; the bottom sheet stays fixed.
+                    primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    positionModalDesktop(step, primaryTargetEl);
+                }
             }
 
             titleEl.innerHTML = step.title;
             textEl.innerHTML = step.text;
             accordionContainer.innerHTML = getAccordionHTML(step.title);
-            
+
             const accBtn = document.getElementById('tour-accordion-btn');
             accBtn.addEventListener('click', function() {
                 const accContent = document.getElementById('tour-accordion-content');
                 accContent.classList.toggle('show');
-                accBtn.classList.toggle('active'); 
-                if(accContent.classList.contains('show')) {
+                accBtn.classList.toggle('active');
+                if (accContent.classList.contains('show')) {
                     setTimeout(() => textEl.scrollTop = textEl.scrollHeight, 50);
                 }
             });
 
             let displayStep = currentStep;
-            let totalSteps = tourData.length - 1; 
+            let totalSteps = tourData.length - 1;
 
             counterEl.textContent = `${displayStep} of ${totalSteps}`;
-            const progressPercentage = (displayStep / totalSteps) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-
+            progressBar.style.width = `${(displayStep / totalSteps) * 100}%`;
             btnNext.innerHTML = displayStep === totalSteps ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
         }
     }
@@ -552,6 +555,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('tour-close').addEventListener('click', endTour); 
-    backdrop.addEventListener('click', endTour); 
+    document.getElementById('tour-close').addEventListener('click', endTour);
+    backdrop.addEventListener('click', endTour);
 });
