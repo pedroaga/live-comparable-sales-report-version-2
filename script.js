@@ -1,526 +1,560 @@
-/* ═══════════════════════════════════════════════════════════════
-   app.js  —  Los Canelos Munchies Cash Register
-   ═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- Table Hovers (skip on touch/mobile) ---
+    const tableCells = document.querySelectorAll('.comp-grid td, .comp-grid th');
+    tableCells.forEach(cell => {
+        cell.addEventListener('mouseenter', () => {
+            if (window.innerWidth <= 768) return;
+            const colIndex = cell.getAttribute('data-col');
+            if (colIndex !== "0") { 
+                document.querySelectorAll(`.comp-grid [data-col="${colIndex}"]`).forEach(el => el.classList.add('hover-col'));
+            }
+        });
+        cell.addEventListener('mouseleave', () => {
+            const colIndex = cell.getAttribute('data-col');
+            document.querySelectorAll(`.comp-grid [data-col="${colIndex}"]`).forEach(el => el.classList.remove('hover-col'));
+        });
+    });
 
-"use strict";
+    // --- Tour Data Definitions ---
+    const tourData = [
+        // STEP 0: Intro
+        {
+            isIntro: true,
+            title: "Welcome to your Walk-Through",
+            text: `
+                <p>This interactive tour will guide you step-by-step through the components of your valuation analysis.</p>
+                <p style="font-weight: bold; color: var(--brand-navy); margin-top: 1rem;"><i class="fa-solid fa-list-check text-blue"></i> What you will learn:</p>
+                <ul>
+                    <li>The purpose of this report and how it affects your property taxes.</li>
+                    <li>How to read and understand the comparison grid.</li>
+                    <li>Exactly how adjustments are calculated.</li>
+                    <li>How we arrived at the final market value.</li>
+                </ul>
+                <p style="font-weight: bold; color: var(--brand-navy); margin-top: 1rem;"><i class="fa-solid fa-gamepad text-blue"></i> How to use this tool:</p>
+                <ul>
+                    <li>Use the <strong>Next</strong> and <strong>Previous</strong> buttons to navigate.</li>
+                    <li>Click the <strong>accordion</strong> at the bottom of each step for deeper insights and definitions.</li>
+                    <li>You can close the tour at any time by clicking the 'X' or outside the box.</li>
+                </ul>
+            `
+        },
+        {
+            targetId: "target-full-grid", 
+            centerOnTarget: true,
+            isDraggable: true,
+            title: "Purpose of a Comparable Sales Report",
+            text: `
+                <p>A Comparable Sales Report is a market-based valuation analysis. <strong>Its purpose is to estimate what a property would have sold for on the valuation date by comparing it to similar homes that sold around the same time.</strong></p>
+                <p>In a Prop 8 appeal, this report is used to show that the county's enrolled value is too high. If the report supports a value lower than the assessed value on the roll, <strong>that difference may justify a temporary reduction under Proposition 8</strong>. A decline-in-value appeal applies when the property's assessed value exceeds its fair market value, and that the relevant valuation date is January 1, also known as the <strong>lien date</strong>.</p>
+                <p style="color: var(--brand-blue); font-weight: bold; margin-top: 1.5rem;">
+                    <i class="fa-solid fa-lightbulb"></i> FOR EXAMPLE, IN YOUR CASE:
+                </p>
+                <ul>
+                    <li>The county had your property <strong>on the roll at $1,352,520</strong>.</li>
+                    <li><strong>BUT</strong> the market value analysis indicates it is really worth about $1,217,000.</li>
+                    <li><strong>THEREFORE</strong>, the enrolled value should be reduced under Proposition 8.</li>
+                </ul>
+            `
+        },
+        {
+            targetId: "target-grid-head",
+            title: "Report Identity",
+            text: `
+                <p>The report is laid out as a comparison grid. It places the subject property next to three comparable sales and compares them feature by feature. The columns are:</p>
+                <ul>
+                    <li><i class="fa-solid fa-house text-blue"></i> <strong>SUBJECT:</strong> The property being valued.</li>
+                    <li><i class="fa-solid fa-house text-blue"></i> <strong>COMPARABLE SALES (1-3):</strong> Similar homes that sold.</li>
+                </ul>
+                <p>This side-by-side format helps the reader see how each comparable differs from the subject and how those differences affect value.</p>
+            `
+        },
+        {
+            targetCol: "1", 
+            title: "Subject Property (Overview)",
+            text: `
+                <p>The subject property is the property being valued in the appeal. It is the property whose market value the report is trying to estimate.</p>
+                <table class="tour-example-table">
+                    <tr><th>Item</th><th>Subject Property</th></tr>
+                    <tr><td>Address</td><td>25131 Rivendell Dr, Lake Forest, CA 92630</td></tr>
+                    <tr><td>APN</td><td>614-083-07</td></tr>
+                    <tr><td>Roll Value</td><td>$1,352,520</td></tr>
+                    <tr><td>Lien Date</td><td>1/1/2024</td></tr>
+                    <tr><td>Year Built</td><td>1969</td></tr>
+                    <tr><td>Bedrooms</td><td>4</td></tr>
+                    <tr><td>Bathrooms</td><td>2</td></tr>
+                    <tr><td>Improvement Size</td><td>1,955 sq ft</td></tr>
+                    <tr><td>Lot Area</td><td>6,120 sq ft</td></tr>
+                </table>
+                <p>Every comparison in the report is made against this property. When a comparable is described as inferior or superior, that means it is being compared to the subject.</p>
+            `
+        },
+        {
+            targetId: "target-adj-header",
+            title: "Understanding Adjustments",
+            text: `
+                <p>Adjustments are applied to each comparable.</p>
+                <p style="font-weight: bold; color: var(--text-main); font-size: 1.05rem;">
+                    <i class="fa-solid fa-key text-blue"></i> Rule:
+                </p>
+                <ul>
+                    <li>If the comp is inferior &rarr; add value (+)</li>
+                    <li>If the comp is superior &rarr; subtract value (−)</li>
+                </ul>
+                <p>This is because the goal is to estimate what the comparable would have sold for if it had the same features as the subject property. Adjustments are made to the comparable sales, never to the subject property.</p>
+                <p>Comparable sales should be similar in location, size, age, and features, and the strongest sales are generally those closest to the January 1 valuation date and proximity. <em>NOTE: Sales after the lien date are limited, while earlier sales may be used with time adjustment if needed.</em></p>
+                <p style="margin-top: 1.5rem;">
+                    <strong style="color: #1e293b; font-size: 1.05rem;">
+                        <i class="fa-solid fa-circle-exclamation text-blue" style="font-size: 1.2rem;"></i> Why adjustments are needed (Very Important):
+                    </strong>
+                </p>
+                <p style="font-style: italic; color: #4b5563; font-size: 1rem;">No two homes are identical. So we ask: "If this comparable were exactly like the subject property… what would it have sold for?"</p>
+            `
+        },
+        {
+            targetCol: "2", 
+            title: "Comparable Sale 1 Analysis",
+            text: `
+                <p>Comparable Sale 1 is especially notable because it is only 105.6 feet from the subject, making it extremely close in location. It also shares the same year built, which strengthens its comparability. However, it is smaller and has fewer bedrooms and bathrooms than the subject.</p>
+                <table class="tour-example-table">
+                    <tr><th>Feature</th><th>Subject</th><th>Comp 1</th><th>Adjustment</th></tr>
+                    <tr><td>Bedrooms</td><td>4</td><td>3</td><td>+$20,000</td></tr>
+                    <tr><td>Bathrooms</td><td>2</td><td>1</td><td>+$20,000</td></tr>
+                    <tr><td>Improvement Size</td><td>1,955</td><td>1,697</td><td>+$54,000</td></tr>
+                    <tr><td>Lot Area</td><td>6,120</td><td>5,400</td><td>+$10,000</td></tr>
+                </table>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> +$104,000<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,100,000 + $104,000 = $1,204,000
+                </p>
+                <p><strong>Explanation:</strong> Comp 1 sold for $1.1M, but it was inferior to the subject in several important ways. After adjusting it as though it had the subject's bedroom count, bathroom count, size, and lot size, it indicates the subject would be worth about $1,204,000.</p>
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Review Adjustment Rules</a>
+                </div>
+            `
+        },
+        {
+            targetCol: "3", 
+            title: "Comparable Sale 2 Analysis",
+            text: `
+                <p>Comp 2 sold for $1,320,000 and is 0.27 miles away. It is closer in bathroom count than Comp 1, but it is larger than the subject and sits on a larger lot.</p>
+                <table class="tour-example-table">
+                    <tr><th>Feature</th><th>Subject</th><th>Comp 2</th><th>Adjustment</th></tr>
+                    <tr><td>Bedrooms</td><td>4</td><td>3</td><td>+$20,000</td></tr>
+                    <tr><td>Bathrooms</td><td>2</td><td>2</td><td>$0</td></tr>
+                    <tr><td>Improvement Size</td><td>1,955</td><td>2,032</td><td>($16,000)</td></tr>
+                    <tr><td>Lot Area</td><td>6,120</td><td>7,000</td><td>($12,000)</td></tr>
+                </table>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> ($8,000)<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,320,000 − $8,000 = $1,312,000
+                </p>
+                <p><strong>Explanation:</strong> Comparable Sale 2 has one fewer bedroom than the subject, so the report adds value for that difference. However, it is also larger and sits on a larger lot than the subject, so those superior features require downward adjustments. After all adjustments are applied, it indicates a value of $1,312,000 for the subject.</p>
+            `
+        },
+        {
+            targetCol: "4", 
+            title: "Comparable Sale 3 Analysis",
+            text: `
+                <p>Comparable Sale 3 is also nearby at 0.29 miles and sold on 10/11/2023, closer to the lien date than Comparable 1. Like Comparable 2, it has one fewer bedroom than the subject, but it is larger and on a larger lot.</p>
+                <table class="tour-example-table">
+                    <tr><th>Feature</th><th>Subject</th><th>Comp 3</th><th>Adjustment</th></tr>
+                    <tr><td>Bedrooms</td><td>4</td><td>3</td><td>+$20,000</td></tr>
+                    <tr><td>Bathrooms</td><td>2</td><td>2</td><td>$0</td></tr>
+                    <tr><td>Improvement Size</td><td>1,955</td><td>2,032</td><td>($16,000)</td></tr>
+                    <tr><td>Lot Area</td><td>6,120</td><td>7,400</td><td>($18,000)</td></tr>
+                </table>
+                <p style="font-size: 1.05rem;">
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Total Adjustment:</strong> ($14,000)<br>
+                    <i class="fa-solid fa-arrow-right text-blue"></i> <strong>Adjusted Value:</strong> $1,150,000 − $14,000 = $1,136,000
+                </p>
+                <p><strong>Explanation:</strong> Comparable Sale 3 is adjusted upward for having fewer bedrooms than the subject, but downward because it is superior in improvement size and lot size. After all adjustments are applied, it supports an adjusted value of $1,136,000.</p>
+            `
+        },
+        {
+            targetId: "target-add-rows",
+            title: "Additional Rows in the Grid",
+            text: `
+                <p>The report also includes rows for view, year built, remodeled/condition, pool, noise/traffic, and property subtype. These rows help the reader understand the broader comparison between the subject and the comparable sales, even if a separate dollar adjustment was not applied in every instance.</p>
+                <p><strong>For example:</strong> The subject was built in 1969.</p>
+                <ul>
+                    <li>Comparable 1 was also built in 1969.</li>
+                    <li>Comparables 2 and 3 were built in 1979.</li>
+                </ul>
+                <p>The report also shows that all properties are single-family residences and that the subject and comparables do not appear to have a noise/traffic issue noted in the grid. These details help demonstrate that the sales are broadly comparable in use and neighborhood setting.</p>
+            `
+        },
+        {
+            targetId: "target-total-net",
+            title: "Total Net Adjustments",
+            text: `
+                <p>The report totals all line-item adjustments for each comparable into a single Total Net Adjustment number.</p>
+                <table class="tour-example-table">
+                    <tr><th>Comparable</th><th>Total Net Adjustment</th></tr>
+                    <tr><td>Comparable Sale 1</td><td>+$104,000</td></tr>
+                    <tr><td>Comparable Sale 2</td><td>($8,000)</td></tr>
+                    <tr><td>Comparable Sale 3</td><td>($14,000)</td></tr>
+                </table>
+                <p>This number reflects the overall difference between the comparable and the subject after considering the adjusted features.</p>
+                <p>A positive net adjustment means the comparable was overall inferior to the subject. A negative net adjustment means the comparable was overall superior to the subject.</p>
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="4"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> Revisit Adjustment Rules</a>
+                </div>
+            `
+        },
+        {
+            targetId: "target-final-adj",
+            title: "Final Adjusted Values",
+            text: `
+                <p>After applying the total net adjustments to the original sale prices, the report arrives at a Final Adjusted Value for each comparable.</p>
+                <table class="tour-example-table">
+                    <tr><th>Comparable</th><th>Sale Price</th><th>Net Adjustment</th><th>Final Adjusted Value</th></tr>
+                    <tr><td>Comparable Sale 1</td><td>$1,100,000</td><td>+$104,000</td><td>$1,204,000</td></tr>
+                    <tr><td>Comparable Sale 2</td><td>$1,320,000</td><td>($8,000)</td><td>$1,312,000</td></tr>
+                    <tr><td>Comparable Sale 3</td><td>$1,150,000</td><td>($14,000)</td><td>$1,136,000</td></tr>
+                </table>
+                <p>These adjusted values are the core market indications in the report. Each one represents the value that comparable suggests for the subject after accounting for differences.</p>
+            `
+        },
+        {
+            targetId: "target-adj-sqft",
+            title: "Adjusted Price Per Square Foot",
+            text: `
+                <p>The report also provides an Adjusted $/Sqft (SUBJ) figure for each comparable:</p>
+                <table class="tour-example-table">
+                    <tr><th>Comparable</th><th>Adjusted $/Sqft (SUBJ)</th></tr>
+                    <tr><td>Comparable Sale 1</td><td>616</td></tr>
+                    <tr><td>Comparable Sale 2</td><td>671</td></tr>
+                    <tr><td>Comparable Sale 3</td><td>581</td></tr>
+                </table>
+                <p>This serves as a consistency check. It helps the reader see the adjusted value indications on a price-per-square-foot basis tied back to the subject property.</p>
+            `
+        },
+        {
+            targetId: "target-weight",
+            title: "Weighting and Reconciliation",
+            text: `
+                <p>Once the comparable sales have been adjusted, the next step is to reconcile them into a single final value opinion. The Prop 8 guide explains that the adjusted sales should be weighed and reconciled to a final value conclusion.</p>
+                <p>In this report, each comparable is weighted equally at 33%.</p>
+                <table class="tour-example-table">
+                    <tr><th>Comparable</th><th>Weight</th></tr>
+                    <tr><td>Comparable Sale 1</td><td>33%</td></tr>
+                    <tr><td>Comparable Sale 2</td><td>33%</td></tr>
+                    <tr><td>Comparable Sale 3</td><td>33%</td></tr>
+                </table>
+                <p>By weighting each comparable equally, the report treats all three as meaningful indicators of value.</p>
+            `
+        },
+        {
+            targetId: "target-final-val",
+            title: "Final Value Indicated By Market Approach",
+            text: `
+                <p>At the bottom of the report, the grid concludes:</p>
+                <p style="font-size: 1.1rem; color: #1e293b;">
+                    <strong><i class="fa-solid fa-flag-checkered text-blue"></i> Final Value Indicated By Market Approach: $1,217,000</strong>
+                </p>
+                <p>This is the report's final opinion of the subject property's market value as of the lien date.</p>
+            `
+        },
+        {
+            targetId: "target-roll-val",
+            title: "Comparison to the Enrolled Value",
+            text: `
+                <p>The significance of the report becomes clear when the market value conclusion is compared to the enrolled value on the roll.</p>
+                <table class="tour-example-table">
+                    <tr><th>Item</th><th>Amount</th></tr>
+                    <tr><td>Enrolled / Roll Value</td><td>$1,352,520</td></tr>
+                    <tr><td>Final Market Value Conclusion</td><td>$1,217,000</td></tr>
+                    <tr><td><strong>Difference</strong></td><td><strong>$135,520</strong></td></tr>
+                </table>
+                <p>This means the report supports the position that the property was enrolled $135,520 above market value as of January 1, 2024.</p>
+                <p>That difference is what supports the Prop 8 assessment reduction request.</p>
+                <div class="quick-links-container">
+                    <div class="quick-links-title">Helpful References</div>
+                    <a class="quick-link" data-step="13"><i class="fa-regular fa-magnifying-glass-arrows-rotate"></i> See how final value was calculated</a>
+                </div>
+            `
+        },
+        {
+            targetId: "target-notes",
+            title: "Final Conclusion & Key Support",
+            text: `
+                <p><strong><i class="fa-solid fa-scale-balanced text-blue"></i> Market Value vs. Assessed Value (Core Argument)</strong></p>
+                <ul>
+                    <li>Enrolled Value: $1,352,520</li>
+                    <li>Supported Market Value: $1,217,000</li>
+                    <li>Overvaluation: ~$135,520</li>
+                    <li>All three adjusted comparables fall below the enrolled value, supporting a decline-in-value as of 1/1/2024 (lien date).</li>
+                </ul>
+                <p><strong><i class="fa-solid fa-1 text-blue"></i> Comparable 1 (Strongest Location Indicator)</strong></p>
+                <ul>
+                    <li>Located ~105 feet from subject (same micro-location).</li>
+                    <li>Sold for $1,100,000 and adjusted to $1,204,000.</li>
+                    <li>Required upward adjustments due to being inferior. Even after adjustments, it is still well below assessed value.</li>
+                </ul>
+                <p><strong><i class="fa-solid fa-2 text-blue"></i> Comparable 2 (Most Current Sale)</strong></p>
+                <ul>
+                    <li>Sold 03/11/2024 (closest to lien date; highly relevant timing).</li>
+                    <li>Minimal net adjustment (-$8,000) indicates strong comparability. Adjusted value: $1,312,000.</li>
+                </ul>
+                <p><strong><i class="fa-solid fa-3 text-blue"></i> Comparable 3 (Lower-End Market Indicator)</strong></p>
+                <ul>
+                    <li>Sold for $1,150,000, adjusted to $1,136,000.</li>
+                    <li>Represents the lower bound of market range, confirming subject value trends closer to low–mid $1.1M range.</li>
+                </ul>
+            `
+        }
+    ];
 
-// ── Config ────────────────────────────────────────────────────────────────────
-const BUSINESS_NAME  = "LOS CANELOS MUNCHIES";
-const BUSINESS_ADDR  = "4154 S Normandie Ave";
-const BUSINESS_CITY  = "Los Angeles, CA 90037";
-const SUMMARY_PIN    = "1997";
-const STORAGE_KEY    = "loscanelos_receipts";
-const LOGO_URL       = "https://i.ibb.co/vxHrGVKL/los-canelos-2.png";
+    let currentStep = 0;
+    const modal = document.getElementById('tour-modal');
+    const backdrop = document.getElementById('tour-backdrop');
+    const titleEl = document.getElementById('tour-step-title');
+    const textEl = document.getElementById('tour-content-text');
+    const counterEl = document.getElementById('tour-counter');
+    const progressBar = document.getElementById('tour-progress-bar');
+    const accordionContainer = document.getElementById('tour-accordion-container');
+    const dragHandle = document.getElementById('tour-drag-handle');
+    const tourArrow = modal.querySelector('.tour-arrow');
 
-const ITEMS = [
-  {
-    id:    "raspado",
-    name:  "Raspado",
-    price: 6.00,
-    img:   "https://i.ibb.co/gZSPxhR1/raspado.png",
-  },
-  {
-    id:    "water",
-    name:  "Water Bottle",
-    price: 1.50,
-    img:   "https://i.ibb.co/SXjNQBnx/water-bottle.png",
-  },
-  {
-    id:    "tostiloko",
-    name:  "Tostiloko",
-    price: 10.00,
-    img:   "https://i.ibb.co/Nhz268X/tosti.png",
-  },
-];
+    const isMobile = () => window.innerWidth <= 768;
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let order    = {};
-let receipts = [];
-let payType  = "cash";
-let tendered = 0;
+    // --- Draggable Logic (desktop only) ---
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    dragHandle.onmousedown = dragMouseDown;
 
-// ── Persistence ───────────────────────────────────────────────────────────────
-function saveToStorage() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(receipts)); } catch (_) {}
-}
-
-function loadFromStorage() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        receipts = parsed;
-        return true;
-      }
+    function dragMouseDown(e) {
+        if (isMobile()) return;
+        e = e || window.event;
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        dragHandle.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
     }
-  } catch (_) {}
-  return false;
-}
 
-// ── Leave warning ─────────────────────────────────────────────────────────────
-window.addEventListener("beforeunload", (e) => {
-  if (receipts.length > 0) {
-    e.preventDefault();
-    e.returnValue = "You have unsaved orders. Are you sure you want to leave?";
-  }
-});
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        modal.style.top = (modal.offsetTop - pos2) + "px";
+        modal.style.left = (modal.offsetLeft - pos1) + "px";
+        modal.style.transform = 'none';
+    }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
-const fmt = (n) => "$" + n.toFixed(2);
+    function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        dragHandle.style.cursor = 'grab';
+        document.body.style.userSelect = '';
+    }
 
-const now12h = () =>
-  new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+    // --- Quick Link Delegation ---
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('.quick-link');
+        if (link) {
+            e.preventDefault();
+            const stepIndex = parseInt(link.getAttribute('data-step'), 10);
+            if (!isNaN(stepIndex) && stepIndex >= 0 && stepIndex < tourData.length) {
+                currentStep = stepIndex;
+                updateTour();
+            }
+        }
+    });
 
-const nowFull = () =>
-  new Date().toLocaleString("en-US", {
-    month: "short", day: "numeric", year: "numeric",
-    hour: "numeric", minute: "2-digit", hour12: true,
-  });
-
-const orderTotal = () =>
-  ITEMS.reduce((s, it) => s + (order[it.id] || 0) * it.price, 0);
-
-// ── Clock ─────────────────────────────────────────────────────────────────────
-function tickClock() {
-  const el = document.getElementById("clock");
-  if (el) el.textContent = now12h();
-}
-setInterval(tickClock, 1000);
-tickClock();
-
-// ── Render items ──────────────────────────────────────────────────────────────
-function renderItems() {
-  const container = document.getElementById("itemsList");
-  container.innerHTML = "";
-
-  ITEMS.forEach((it) => {
-    const qty  = order[it.id] || 0;
-    const card = document.createElement("div");
-    card.className = "item-card" + (qty > 0 ? " has-qty" : "");
-
-    card.innerHTML = `
-      <div class="item-img-wrap">
-        <div class="item-img">
-          <img src="${it.img}" alt="${it.name}" loading="lazy"
-               onerror="this.style.display='none';" />
+    const getAccordionHTML = (titleText) => `
+        <div class="tour-accordion">
+            <button class="accordion-header" id="tour-accordion-btn">
+                <span>Click to read more about [placeholder]</span>
+                <i class="fa-solid fa-chevron-down"></i> 
+            </button>
+            <div class="accordion-content" id="tour-accordion-content">
+                <ol>
+                    <li>This is a placeholder note for the selected section. It can contain secondary instructions or definitions.</li>
+                    <li>If you need further clarification on certain information being requested, please review the Assessify guidelines.</li>
+                    <li>Be prepared to submit this evidence as soon as the Assessor's Office makes a request for it.</li>
+                </ol>
+            </div>
         </div>
-        ${qty > 0 ? `<div class="item-qty-badge">${qty}</div>` : ""}
-      </div>
-      <div class="item-info">
-        <div class="item-name">${it.name}</div>
-        <div class="item-price">${fmt(it.price)} each</div>
-        ${qty > 0 ? `<div class="item-subtotal">Subtotal: ${fmt(qty * it.price)}</div>` : ""}
-      </div>
-      <div class="item-controls">
-        ${qty > 0 ? `<button class="ctrl-btn minus" data-id="${it.id}" aria-label="Remove ${it.name}">−</button>` : ""}
-        <button class="ctrl-btn plus" data-id="${it.id}" aria-label="Add ${it.name}">+</button>
-      </div>
     `;
 
-    container.appendChild(card);
-  });
+    function positionModalDesktop(step, primaryTargetEl) {
+        primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  container.querySelectorAll(".ctrl-btn.plus").forEach((btn) =>
-    btn.addEventListener("click", () => addItem(btn.dataset.id))
-  );
-  container.querySelectorAll(".ctrl-btn.minus").forEach((btn) =>
-    btn.addEventListener("click", () => removeItem(btn.dataset.id))
-  );
-}
+        setTimeout(() => {
+            const rect = primaryTargetEl.getBoundingClientRect();
 
-// ── Render totals / change ────────────────────────────────────────────────────
-function renderTotal() {
-  const total = orderTotal();
-  document.getElementById("totalAmount").textContent = fmt(total);
-
-  document.getElementById("btnComplete").disabled = total === 0;
-  document.getElementById("btnReceipt").disabled  = receipts.length === 0;
-  document.getElementById("btnSummary").disabled  = receipts.length === 0;
-
-  // Badge
-  const badge = document.getElementById("orderBadge");
-  if (receipts.length > 0) {
-    const grand = receipts.reduce((s, r) => s + r.total, 0);
-    badge.textContent = `${receipts.length} completed order${receipts.length !== 1 ? "s" : ""} · ${fmt(grand)} total`;
-    badge.style.display = "block";
-  } else {
-    badge.style.display = "none";
-  }
-
-  // Change calculator
-  const changeBox    = document.getElementById("changeBox");
-  const changeLabel  = document.getElementById("changeLabel");
-  const changeAmount = document.getElementById("changeAmount");
-
-  if (payType === "cash" && tendered > 0 && total > 0) {
-    const diff = tendered - total;
-    changeBox.style.display = "flex";
-    if (diff >= 0) {
-      changeBox.classList.remove("short");
-      changeLabel.textContent  = "CUSTOMER CHANGE";
-      changeAmount.textContent = fmt(diff);
-    } else {
-      changeBox.classList.add("short");
-      changeLabel.textContent  = "AMOUNT SHORT";
-      changeAmount.textContent = fmt(Math.abs(diff));
+            if (step.centerOnTarget) {
+                modal.style.top = (rect.top + window.scrollY + (rect.height / 2)) + 'px';
+                modal.style.left = (rect.left + (rect.width / 2)) + 'px';
+                modal.style.transform = 'translate(-50%, -50%)';
+                tourArrow.style.display = 'none';
+                if (step.isDraggable) {
+                    dragHandle.style.display = 'inline-block';
+                }
+            } else if (step.targetCol) {
+                const isLeftHalf = rect.left < window.innerWidth / 2;
+                modal.style.top = '15%';
+                if (isLeftHalf) {
+                    modal.style.left = (rect.right + 25) + 'px';
+                    tourArrow.style.top = '30px';
+                    tourArrow.style.left = '-15px';
+                    tourArrow.style.borderTop = '15px solid transparent';
+                    tourArrow.style.borderBottom = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid #ffffff';
+                    tourArrow.style.borderLeft = 'none';
+                } else {
+                    modal.style.left = (rect.left - modal.offsetWidth - 25) + 'px';
+                    tourArrow.style.top = '30px';
+                    tourArrow.style.left = '100%';
+                    tourArrow.style.borderTop = '15px solid transparent';
+                    tourArrow.style.borderBottom = '15px solid transparent';
+                    tourArrow.style.borderLeft = '15px solid #ffffff';
+                    tourArrow.style.borderRight = 'none';
+                }
+            } else {
+                const targetCenter = rect.top + (rect.height / 2);
+                if (targetCenter < window.innerHeight / 2) {
+                    modal.style.top = (rect.bottom + window.scrollY + 20) + 'px';
+                    modal.style.left = Math.max(20, rect.left) + 'px';
+                    tourArrow.style.top = '-15px';
+                    tourArrow.style.left = '30px';
+                    tourArrow.style.borderBottom = '15px solid #f8fafc';
+                    tourArrow.style.borderTop = 'none';
+                    tourArrow.style.borderLeft = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid transparent';
+                } else {
+                    modal.style.top = (rect.top + window.scrollY - modal.offsetHeight - 20) + 'px';
+                    modal.style.left = Math.max(20, rect.left) + 'px';
+                    tourArrow.style.top = '100%';
+                    tourArrow.style.left = '30px';
+                    tourArrow.style.borderTop = '15px solid #ffffff';
+                    tourArrow.style.borderBottom = 'none';
+                    tourArrow.style.borderLeft = '15px solid transparent';
+                    tourArrow.style.borderRight = '15px solid transparent';
+                }
+            }
+        }, 150);
     }
-  } else {
-    changeBox.style.display = "none";
-  }
-}
 
-function render() {
-  renderItems();
-  renderTotal();
-}
+    function updateTour() {
+        const step = tourData[currentStep];
+        const btnPrev = document.getElementById('tour-prev');
+        const btnNext = document.getElementById('tour-next');
 
-// ── Order mutations ───────────────────────────────────────────────────────────
-function addItem(id) {
-  order[id] = (order[id] || 0) + 1;
-  render();
-}
+        backdrop.classList.remove('hidden');
+        document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
 
-function removeItem(id) {
-  if ((order[id] || 0) <= 1) delete order[id];
-  else order[id]--;
-  render();
-}
+        textEl.scrollTop = 0;
+        let primaryTargetEl = null;
 
-function clearOrder() {
-  order    = {};
-  tendered = 0;
-  document.getElementById("tenderedInput").value = "";
-  highlightBill(null);
-  render();
-}
+        if (step.isIntro) {
+            // On desktop: center in viewport. On mobile: CSS bottom-sheet handles it.
+            if (!isMobile()) {
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+            }
 
-function completeOrder() {
-  const total = orderTotal();
-  if (total === 0) return;
+            tourArrow.style.display = 'none';
+            dragHandle.style.display = 'none';
+            accordionContainer.style.display = 'none';
+            btnPrev.style.display = 'none';
 
-  receipts.push({
-    time:    now12h(),
-    items:   ITEMS.filter((it) => order[it.id]).map((it) => ({
-               name:     it.name,
-               qty:      order[it.id],
-               price:    it.price,
-               subtotal: order[it.id] * it.price,
-             })),
-    total,
-    payType,
-  });
+            btnNext.innerHTML = 'Get Started <i class="fa-solid fa-arrow-right"></i>';
+            counterEl.textContent = 'Introduction';
+            progressBar.style.width = '0%';
 
-  saveToStorage();
-  clearOrder();
-}
+            titleEl.innerHTML = step.title;
+            textEl.innerHTML = step.text;
 
-// ── Payment type ──────────────────────────────────────────────────────────────
-function setPayType(type) {
-  payType = type;
-  document.getElementById("btnCash").classList.toggle("active",   type === "cash");
-  document.getElementById("btnCredit").classList.toggle("active", type === "credit");
-  document.getElementById("cashSection").style.display = type === "cash" ? "block" : "none";
-  renderTotal();
-}
+        } else {
+            // Steps 1+
+            // On mobile: arrow is hidden via CSS; no inline positioning needed.
+            tourArrow.style.display = isMobile() ? 'none' : 'block';
+            accordionContainer.style.display = 'block';
+            btnPrev.style.display = 'inline-block';
+            btnPrev.style.visibility = 'visible';
 
-// ── Bill buttons ──────────────────────────────────────────────────────────────
-function highlightBill(val) {
-  document.querySelectorAll(".bill-btn").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.val === String(val));
-  });
-}
+            modal.style.transform = 'none';
+            dragHandle.style.display = 'none';
 
-document.querySelectorAll(".bill-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    tendered = parseFloat(btn.dataset.val);
-    document.getElementById("tenderedInput").value = tendered;
-    highlightBill(btn.dataset.val);
-    renderTotal();
-  });
+            if (step.targetCol) {
+                const columnCells = document.querySelectorAll(`.comp-grid [data-col="${step.targetCol}"]`);
+                columnCells.forEach(cell => cell.classList.add('tour-highlight-active'));
+                if (columnCells.length > 0) primaryTargetEl = columnCells[0];
+            } else if (step.targetId) {
+                primaryTargetEl = document.getElementById(step.targetId);
+                if (primaryTargetEl) primaryTargetEl.classList.add('tour-highlight-active');
+            }
+
+            if (primaryTargetEl) {
+                if (isMobile()) {
+                    // On mobile: just scroll the target into view; the bottom sheet stays fixed.
+                    primaryTargetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    positionModalDesktop(step, primaryTargetEl);
+                }
+            }
+
+            titleEl.innerHTML = step.title;
+            textEl.innerHTML = step.text;
+            accordionContainer.innerHTML = getAccordionHTML(step.title);
+
+            const accBtn = document.getElementById('tour-accordion-btn');
+            accBtn.addEventListener('click', function() {
+                const accContent = document.getElementById('tour-accordion-content');
+                accContent.classList.toggle('show');
+                accBtn.classList.toggle('active');
+                if (accContent.classList.contains('show')) {
+                    setTimeout(() => textEl.scrollTop = textEl.scrollHeight, 50);
+                }
+            });
+
+            let displayStep = currentStep;
+            let totalSteps = tourData.length - 1;
+
+            counterEl.textContent = `${displayStep} of ${totalSteps}`;
+            progressBar.style.width = `${(displayStep / totalSteps) * 100}%`;
+            btnNext.innerHTML = displayStep === totalSteps ? 'Finish' : 'Next <i class="fa-solid fa-chevron-right"></i>';
+        }
+    }
+
+    function endTour() {
+        modal.classList.add('hidden');
+        backdrop.classList.add('hidden');
+        document.querySelectorAll('.tour-highlight-active').forEach(el => el.classList.remove('tour-highlight-active'));
+    }
+
+    document.getElementById('start-tour-btn').addEventListener('click', () => {
+        currentStep = 0;
+        modal.classList.remove('hidden');
+        updateTour();
+    });
+
+    document.getElementById('tour-next').addEventListener('click', () => {
+        if (currentStep < tourData.length - 1) {
+            currentStep++;
+            updateTour();
+        } else {
+            endTour();
+        }
+    });
+
+    document.getElementById('tour-prev').addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateTour();
+        }
+    });
+
+    document.getElementById('tour-close').addEventListener('click', endTour);
+    backdrop.addEventListener('click', endTour);
 });
-
-document.getElementById("tenderedInput").addEventListener("input", (e) => {
-  tendered = parseFloat(e.target.value) || 0;
-  highlightBill(null);
-  renderTotal();
-});
-
-// ── Action buttons ────────────────────────────────────────────────────────────
-document.getElementById("btnCash").addEventListener("click",    () => setPayType("cash"));
-document.getElementById("btnCredit").addEventListener("click",  () => setPayType("credit"));
-document.getElementById("btnClear").addEventListener("click",   clearOrder);
-document.getElementById("btnComplete").addEventListener("click", completeOrder);
-document.getElementById("btnReceipt").addEventListener("click",  () => generateReceiptPDF());
-document.getElementById("btnSummary").addEventListener("click",  openPinModal);
-document.getElementById("bannerDismiss").addEventListener("click", () => {
-  document.getElementById("savedBanner").style.display = "none";
-});
-
-// ── PIN Modal ─────────────────────────────────────────────────────────────────
-function openPinModal() {
-  document.getElementById("pinInput").value = "";
-  document.getElementById("pinError").style.display = "none";
-  document.getElementById("pinInput").classList.remove("error");
-  document.getElementById("pinOverlay").style.display = "flex";
-  setTimeout(() => document.getElementById("pinInput").focus(), 50);
-}
-function closePinModal() {
-  document.getElementById("pinOverlay").style.display = "none";
-}
-function submitPin() {
-  const val = document.getElementById("pinInput").value.trim();
-  if (val === SUMMARY_PIN) {
-    closePinModal();
-    generateSummaryPDF();
-  } else {
-    document.getElementById("pinError").style.display = "block";
-    document.getElementById("pinInput").classList.add("error");
-    document.getElementById("pinInput").value = "";
-    document.getElementById("pinInput").focus();
-  }
-}
-
-document.getElementById("pinCancel").addEventListener("click",  closePinModal);
-document.getElementById("pinConfirm").addEventListener("click", submitPin);
-document.getElementById("pinInput").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") submitPin();
-});
-document.getElementById("pinOverlay").addEventListener("click", (e) => {
-  if (e.target === document.getElementById("pinOverlay")) closePinModal();
-});
-
-// ── PDF helpers ───────────────────────────────────────────────────────────────
-
-/**
- * Load an image URL and return a base64 data-URL.
- * Falls back gracefully if the fetch fails.
- */
-function loadImgBase64(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width  = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        canvas.getContext("2d").drawImage(img, 0, 0);
-        resolve(canvas.toDataURL("image/png"));
-      } catch (_) { resolve(null); }
-    };
-    img.onerror = () => resolve(null);
-    img.src = url;
-  });
-}
-
-/**
- * Add the company logo centred at the top of the receipt.
- * Returns the Y position after the logo (or the same Y if it failed).
- */
-async function addLogoToPDF(doc, W, startY) {
-  const b64 = await loadImgBase64(LOGO_URL);
-  if (!b64) return startY;
-
-  // Draw logo proportionally, capped at 40 mm wide
-  const maxW  = 40;
-  const imgEl = new Image();
-  imgEl.src   = b64;
-  await new Promise((r) => { imgEl.onload = r; });
-  const ratio  = imgEl.naturalHeight / imgEl.naturalWidth;
-  const drawW  = Math.min(maxW, W - 10);
-  const drawH  = drawW * ratio;
-  const x      = (W - drawW) / 2;
-
-  doc.addImage(b64, "PNG", x, startY, drawW, drawH);
-  return startY + drawH + 3;
-}
-
-// ── Receipt List PDF (preview) ────────────────────────────────────────────────
-async function generateReceiptPDF() {
-  if (!window.jspdf) { alert("PDF engine not ready — please try again."); return; }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "mm", format: [80, 297] });
-  const W = 80;
-  let y = 6;
-
-  /* helpers */
-  const center = (txt, size, bold = false) => {
-    doc.setFontSize(size);
-    doc.setFont("courier", bold ? "bold" : "normal");
-    doc.text(txt, W / 2, y, { align: "center" });
-    y += size * 0.45 + 1;
-  };
-  const dashes = () => {
-    doc.setLineDash([1, 1.2]);
-    doc.setDrawColor(150, 150, 150);
-    doc.line(4, y, W - 4, y);
-    y += 3;
-  };
-  const row = (left, right, size = 8, bold = false) => {
-    doc.setFontSize(size);
-    doc.setFont("courier", bold ? "bold" : "normal");
-    doc.text(String(left),  6,     y);
-    doc.text(String(right), W - 6, y, { align: "right" });
-    y += size * 0.45 + 1.4;
-  };
-
-  /* Logo */
-  y = await addLogoToPDF(doc, W, y);
-  y += 1;
-
-  /* Header */
-  center(BUSINESS_NAME, 9, true);
-  center(BUSINESS_ADDR, 7);
-  center(BUSINESS_CITY, 7);
-  center(nowFull(), 7);
-  y += 1;
-  dashes();
-  center("** PREVIEW  —  NOT FINAL **", 7);
-  y += 1;
-  center("RECEIPT LIST", 9, true);
-  y += 1;
-  dashes();
-
-  /* ── TRANSACTIONS first ── */
-  center("TRANSACTIONS", 8, true);
-  y += 0.5;
-  receipts.forEach((r, i) => {
-    row(`#${i + 1}  ${r.time}`, fmt(r.total), 7.5);
-  });
-  y += 1;
-  dashes();
-
-  /* ── Item totals ── */
-  row("ITEM", "TOTAL", 8, true);
-  dashes();
-
-  const allItems = {};
-  receipts.forEach((r) =>
-    r.items.forEach((it) => {
-      if (!allItems[it.name]) allItems[it.name] = { qty: 0, total: 0, price: it.price };
-      allItems[it.name].qty   += it.qty;
-      allItems[it.name].total += it.subtotal;
-    })
-  );
-
-  Object.entries(allItems).forEach(([name, d]) => {
-    row(name, "", 8);
-    row(`  ${d.qty} x ${fmt(d.price)}`, fmt(d.total), 7.5);
-  });
-
-  dashes();
-  const grandTotal = receipts.reduce((s, r) => s + r.total, 0);
-  row("TOTAL", fmt(grandTotal), 9, true);
-  y += 2;
-  dashes();
-  center(`${receipts.length} transaction(s)`, 7);
-
-  /* Diagonal watermark */
-  doc.saveGraphicsState();
-  doc.setGState(new doc.GState({ opacity: 0.09 }));
-  doc.setFontSize(19);
-  doc.setFont("courier", "bold");
-  doc.setTextColor(180, 0, 0);
-  doc.text("PREVIEW ONLY", W / 2, 140, { align: "center", angle: 45 });
-  doc.text("PREVIEW ONLY", W / 2, 210, { align: "center", angle: 45 });
-  doc.restoreGraphicsState();
-  doc.setTextColor(0, 0, 0);
-
-  doc.output("dataurlnewwindow");
-}
-
-// ── Daily Summary PDF (authorized) ───────────────────────────────────────────
-async function generateSummaryPDF() {
-  if (!window.jspdf) { alert("PDF engine not ready — please try again."); return; }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: "mm", format: [80, 297] });
-  const W = 80;
-  let y = 6;
-
-  const center = (txt, size, bold = false) => {
-    doc.setFontSize(size);
-    doc.setFont("courier", bold ? "bold" : "normal");
-    doc.text(txt, W / 2, y, { align: "center" });
-    y += size * 0.45 + 1;
-  };
-  const dashes = () => {
-    doc.setLineDash([1, 1.2]);
-    doc.setDrawColor(150, 150, 150);
-    doc.line(4, y, W - 4, y);
-    y += 3;
-  };
-  const row = (left, right, size = 8, bold = false) => {
-    doc.setFontSize(size);
-    doc.setFont("courier", bold ? "bold" : "normal");
-    doc.text(String(left),  6,     y);
-    doc.text(String(right), W - 6, y, { align: "right" });
-    y += size * 0.45 + 1.6;
-  };
-
-  /* Logo */
-  y = await addLogoToPDF(doc, W, y);
-  y += 1;
-
-  /* Header */
-  center(BUSINESS_NAME, 9, true);
-  center(BUSINESS_ADDR, 7);
-  center(BUSINESS_CITY, 7);
-  y += 1;
-  center("DAILY SETTLEMENT", 10, true);
-  center(nowFull(), 7);
-  y += 1;
-  dashes();
-  center("AUTHORIZED SUMMARY", 8, true);
-  dashes();
-
-  /* All sales */
-  row("TIME", "AMT    TYPE", 7.5, true);
-  dashes();
-
-  receipts.forEach((r, i) => {
-    const tag = r.payType === "cash" ? "CASH" : "CRD ";
-    row(`#${i + 1}  ${r.time}`, `${fmt(r.total)}  ${tag}`, 7.5);
-  });
-
-  dashes();
-
-  /* Payment breakdown */
-  const cashTotal   = receipts.filter((r) => r.payType === "cash").reduce((s, r) => s + r.total, 0);
-  const creditTotal = receipts.filter((r) => r.payType === "credit").reduce((s, r) => s + r.total, 0);
-  const grandTotal  = cashTotal + creditTotal;
-
-  y += 1;
-  row("Cash Payments",   fmt(cashTotal),   8);
-  row("Credit Payments", fmt(creditTotal), 8);
-  y += 1;
-  dashes();
-
-  /* Grand total */
-  doc.setFontSize(9.5);
-  doc.setFont("courier", "bold");
-  doc.text("TOTAL PAYMENTS", 6, y);
-  doc.text(fmt(grandTotal), W - 6, y, { align: "right" });
-  y += 8;
-
-  dashes();
-  center(`${receipts.length} transaction(s)`, 7);
-  y += 2;
-  center("END OF DAY", 8, true);
-  y += 2;
-  center("Authorized: ________________", 7);
-
-  doc.output("dataurlnewwindow");
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-(function init() {
-  const restored = loadFromStorage();
-  if (restored) {
-    document.getElementById("savedBanner").style.display = "flex";
-  }
-  setPayType("cash");
-  render();
-})();
